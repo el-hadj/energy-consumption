@@ -21,16 +21,16 @@ public class FreezerBepos {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_equip", referencedColumnName = "id_equipment")
     @JsonBackReference
-    private Equipmentbepos idEquip;
+    private EquipmentBepos idEquip;
 
-    public FreezerBepos(Integer id_freez, String state, Integer power, Equipmentbepos idEquip) {
+    public FreezerBepos(Integer id_freez, String state, Integer power, EquipmentBepos idEquip) {
         this.id_freez = id_freez;
         this.state = state;
         this.power = power;
         this.idEquip = idEquip;
     }
 
-    public FreezerBepos(String state, Integer power, Equipmentbepos idEquip) {
+    public FreezerBepos(String state, Integer power, EquipmentBepos idEquip) {
         this.state = state;
         this.power = power;
         this.idEquip = idEquip;
@@ -62,11 +62,11 @@ public class FreezerBepos {
         this.power = power;
     }
 
-    public Equipmentbepos getIdEquip() {
+    public EquipmentBepos getIdEquip() {
         return idEquip;
     }
 
-    public void setIdEquip(Equipmentbepos idEquip) {
+    public void setIdEquip(EquipmentBepos idEquip) {
         this.idEquip = idEquip;
     }
 }

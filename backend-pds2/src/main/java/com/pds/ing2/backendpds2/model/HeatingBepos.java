@@ -7,23 +7,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="cooker_bepos")
+@Table(name="heating_bepos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CookerBepos {
+public class HeatingBepos {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id_cooker;
-
-    @Column(name = "state")
+    private Integer id_heating;
+    @Column(name = "thermostat")
+    private Integer thermostat;
+    @Column(name= "state")
     private String state;
-
-    @Column(name = "power")
-    private Integer power;
-
-    @OneToOne(cascade = CascadeType.MERGE)
+    @Column(name="mode")
+    private String mode;
+    @Column(name= "hour_start")
+    private Integer hourStart;
+    @Column(name="hour_end")
+    private Integer hourEnd;
+    @Column(name="temp_declench")
+    private Integer tempDeclench;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_equip", referencedColumnName = "id_equipment")
     @JsonBackReference
     private EquipmentBepos idEquip;

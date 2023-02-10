@@ -25,7 +25,7 @@ public class TelevisionBeposConso {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_equip_tv", referencedColumnName = "id_equipment")
     @JsonBackReference
-    private Equipmentbepos idEquipTv;
+    private EquipmentBepos idEquipTv;
 
     @Column(name = "tv_time")
     private LocalDateTime tvTime;

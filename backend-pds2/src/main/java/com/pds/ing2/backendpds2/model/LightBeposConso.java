@@ -26,7 +26,7 @@ public class LightBeposConso {
     @JoinColumn(name = "id_equip_light", referencedColumnName = "id_equipment")
     @JsonBackReference
     //@Column(name = "id_equip_light")
-    private Equipmentbepos idEquipLight;
+    private EquipmentBepos idEquipLight;
 
     @Column(name = "lightStartTime")
     private LocalDateTime lightDate;

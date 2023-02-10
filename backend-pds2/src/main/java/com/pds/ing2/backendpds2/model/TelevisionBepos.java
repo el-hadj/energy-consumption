@@ -26,7 +26,7 @@ public class TelevisionBepos {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_equip", referencedColumnName = "id_equipment")
     @JsonBackReference
-    private Equipmentbepos idEquip;
+    private EquipmentBepos idEquip;
 
 
 }

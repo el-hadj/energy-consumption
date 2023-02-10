@@ -30,6 +30,6 @@ public class LaundryBeposConso {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_equip_laundry", referencedColumnName = "id_equipment")
     @JsonBackReference
-    private Equipmentbepos idEquipLaundry;
+    private EquipmentBepos idEquipLaundry;
 
 }
