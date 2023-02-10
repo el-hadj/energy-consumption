@@ -17,19 +17,22 @@ import java.time.LocalDateTime;
 public class ConsumptionBepos {
     @Id
     @Column(name = "id_cons")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "cons_bep_gen")
+    @TableGenerator(name = "cons_bep_gen", table = "id_generator", pkColumnName = "gen_name",
+            valueColumnName = "gen_value", initialValue = 1, allocationSize = 1)
     private Integer idConsBep;
     @Column(name = "energy_power")
-    private double energyPower;
+    private Integer energyPower;
     @Column(name = "start_time")
     private LocalDateTime startTime;
-    @Column(name = "state")
-    private boolean stateCons;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "num_equipment", referencedColumnName = "id_equipment")
     @JsonBackReference
-    private Equipmentbepos numEquipment;
+    private EquipmentBepos numEquipment;
 
-
-
-    
+    public ConsumptionBepos(Integer energyPower, LocalDateTime startTime, EquipmentBepos numEquipment) {
+        this.energyPower = energyPower;
+        this.startTime = startTime;
+        this.numEquipment = numEquipment;
+    }
 }

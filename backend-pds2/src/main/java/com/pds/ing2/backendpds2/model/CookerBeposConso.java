@@ -20,19 +20,19 @@ public class CookerBeposConso {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_equip_cook", referencedColumnName = "id_equipment")
     @JsonBackReference
-    private Equipmentbepos idEquipCook;
+    private EquipmentBepos idEquipCook;
 
     @Column(name = "cook_time")
     private Timestamp cookTime;
 
-    public CookerBeposConso(Integer idConsCook, double energyCook, Equipmentbepos idEquipCook, Timestamp cookTime) {
+    public CookerBeposConso(Integer idConsCook, double energyCook, EquipmentBepos idEquipCook, Timestamp cookTime) {
         this.idConsCook = idConsCook;
         this.energyCook = energyCook;
         this.idEquipCook = idEquipCook;
         this.cookTime = cookTime;
     }
 
-    public CookerBeposConso(double energyCook, Equipmentbepos idEquipCook, Timestamp cookTime) {
+    public CookerBeposConso(double energyCook, EquipmentBepos idEquipCook, Timestamp cookTime) {
         this.energyCook = energyCook;
         this.idEquipCook = idEquipCook;
         this.cookTime = cookTime;
@@ -56,11 +56,11 @@ public class CookerBeposConso {
         this.energyCook = energyCook;
     }
 
-    public Equipmentbepos getIdEquipCook() {
+    public EquipmentBepos getIdEquipCook() {
         return idEquipCook;
     }
 
-    public void setIdEquipCook(Equipmentbepos idEquipCook) {
+    public void setIdEquipCook(EquipmentBepos idEquipCook) {
         this.idEquipCook = idEquipCook;
     }
 

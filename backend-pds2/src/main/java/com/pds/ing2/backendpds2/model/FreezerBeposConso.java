@@ -26,7 +26,7 @@ public class FreezerBeposConso {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_equip_freez", referencedColumnName = "id_equipment")
     @JsonBackReference
-    private Equipmentbepos idEquipFreez;
+    private EquipmentBepos idEquipFreez;
 
     @Column(name = "freez_time")
     private LocalDateTime freezTime;
