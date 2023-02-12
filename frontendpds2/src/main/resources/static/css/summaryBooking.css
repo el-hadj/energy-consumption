@@ -1,0 +1,174 @@
+*,
+::before,
+::after {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #eef5f9 !important;
+}
+
+
+#containerGrille {
+    height: 80vh;
+    display: grid;
+    margin: auto;
+    padding-top: 2%;
+}
+#containerGrille main {
+    margin:0 auto;
+    /* permet de centrer en horizontal */
+    width:80%;
+    background-color: white;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1), -1px 0 2px rgba(0, 0, 0, 0.05);
+    border-radius:10px;
+    padding:2% 2%;
+}
+#containerGrille h2{
+    height:50px;
+    margin-bottom: 2%;
+}
+
+#containerGrille .dropdown-menu{
+    display: none;
+}
+
+#containerGrille .btn.btn-secondary.dropdown-toggle{
+    color: #fff;
+    background-color: #5c636a;
+    border-color: #5c636a;
+    width: 35px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 15px;
+}
+#containerGrille .fixed-table-pagination{
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+#containerGrille .fixed-table.pagination{
+    display: flex;
+list-style: none;
+}
+
+#containerGrille ul.pagination{
+    display: flex;
+list-style: none;
+display: flex;
+position: absolute;
+right:0;
+}
+
+#containerGrille .page-link{
+    color: black;
+    list-style: none;
+    text-decoration: none;
+    padding: .375rem .75rem;
+    border: 0.75px solid #f2f4f5;
+}
+
+#containerGrille .page-link:hover {
+    color: black;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+#containerGrille .page-item:first-child .page-link {
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+}
+
+#containerGrille .page-item.active .page-link {
+    background-color: #b584cb;
+}
+
+#containerGrille .form-control.search-input {
+    padding: 0.375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+#containerGrille .btn[title='Actualiser']{
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: white;
+    font-size: 1rem;
+    color: #868686;
+}
+
+
+#viewEquipment{
+    font-size: 15px;
+    background-color: #011638;
+    border-radius: 5px;
+    width: 100px;
+    height: 30px;
+    color: white;
+    border: 1px solid #011638;
+}
+#viewEquipment:hover{
+    cursor: pointer;
+    background-color: white;
+    color:#011638;
+}
+
+#containerGrille .fixed-table-body tbody{
+    text-align :center;
+}
+#containerGrille .btn[title='Actualiser'] {
+    cursor: pointer;
+}
+
+#containerGrille main .fixed-table-toolbar{
+    display: flex;
+}
+
+#containerGrille main .fixed-table-toolbar .columns.columns-right.btn-group.float-right{
+    margin-right: 10px;
+}
+
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+

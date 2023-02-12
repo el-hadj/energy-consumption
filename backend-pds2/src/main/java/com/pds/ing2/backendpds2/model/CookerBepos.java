@@ -18,7 +18,7 @@ public class CookerBepos {
     private Integer id_cooker;
 
     @Column(name = "state")
-    private String state;
+    private Boolean state;
 
     @Column(name = "power")
     private Integer power;

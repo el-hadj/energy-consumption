@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+}
+
+.title {
+    margin-top: 2em;
+}
+.container {
+    height: 77vh;
+}
+
+.chart-wrapper {
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+}

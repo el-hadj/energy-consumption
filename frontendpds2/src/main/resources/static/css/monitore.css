@@ -1,0 +1,11 @@
+*{
+ font-family: 'M PLUS 1', sans-serif;
+}
+
+p{
+ text-align:center;
+ weight: bold;
+}
+body {
+    height:1000px;
+}
