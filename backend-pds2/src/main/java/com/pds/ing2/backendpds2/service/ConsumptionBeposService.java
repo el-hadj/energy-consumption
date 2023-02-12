@@ -34,7 +34,7 @@ public class ConsumptionBeposService {
     private final CookerBeposService cookerBeposService;
 
 
-    //@Scheduled(fixedRate = 4000)
+    @Scheduled(fixedRate = 4000)
     private void addConsumption() {
         List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
         if (equipmentBepos != null) {
@@ -47,13 +47,11 @@ public class ConsumptionBeposService {
                         ConsumptionBepos consumptionBepos = new ConsumptionBepos(lightEnergy, dateTime, e);
                         consumptionBeposRepo.save(consumptionBepos);
                         break;
-                    case "chauffage":
-//                        LightBepos lightBepos = new LightBepos();
-//                        lightBepos.setIdEquip(e);
-//                        Integer lightEnergy = lightBeposService.CalculatingEnergyConsumedLight(e.getIdEquipment());
-//                        ConsumptionBepos consumptionBepos = new ConsumptionBepos(lightEnergy, dateTime, lightBepos.getIdEquip());
-//                        consumptionBeposRepo.save(consumptionBepos);
-//                        break;
+                    case "cuisinière":
+                        log.info("je calcule pour la cuisinière {}", e.getIdEquipment());
+                        Integer cookerEnergy = cookerBeposService.CalculatingEnergyConsumedCooker(e);
+                        ConsumptionBepos consumptionBepos1 = new ConsumptionBepos(cookerEnergy, dateTime, e);
+                        consumptionBeposRepo.save(consumptionBepos1);
                         break;
                 }
                 LocalDateTime newdate = dateTime.plusHours(1);

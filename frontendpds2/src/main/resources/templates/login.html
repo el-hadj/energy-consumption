@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Connexion</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Choices CSS-->
+    <link rel="stylesheet" href="vendor/choices.js/public/assets/styles/choices.min.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+<div class="login-page">
+    <div class="container d-flex align-items-center position-relative py-5">
+        <div class="card shadow-sm w-100 rounded overflow-hidden bg-none">
+            <div class="card-body p-0">
+                <div class="row gx-0 align-items-stretch">
+                    <!-- Logo & Information Panel-->
+                    <div class="col-lg-6">
+                        <div class="info d-flex justify-content-center flex-column p-4 h-100">
+                            <div class="py-5">
+                                <h1 class="display-6 fw-bold">GreeNet</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Form Panel    -->
+                    <div class="col-lg-6 bg-white">
+                        <div class="d-flex align-items-center px-4 px-lg-5 h-100">
+                            <form class="login-form py-5 w-100" method="get" th:action="@{/checkUser}">
+                                <div class="input-material-group mb-3">
+                                    <label class="label-material" type="submit" for="inputEmail">Adresse Email</label>
+                                    <br>
+                                    <input class="input-material" id="inputEmail" type="email" name="email">
+                                </div>
+                                <button class="btn btn-primary mb-3" id="login" type="submit">Se connecter</button><br><a class="text-sm text-paleBlue" href="#">Mot de passe oublié ?</a><br><small class="text-gray-500">Pas de compte ? </small><a class="text-sm text-paleBlue" href="#">S'enregistrer</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center position-absolute bottom-0 start-0 w-100 z-index-20">
+        <p class="text-white">Design by GreeNet</p>
+    </div>
+</div>
+</body>
+</html>
