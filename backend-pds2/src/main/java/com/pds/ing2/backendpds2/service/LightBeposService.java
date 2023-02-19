@@ -7,6 +7,7 @@ import com.pds.ing2.backendpds2.repository.ConsumptionBeposRepo;
 import com.pds.ing2.backendpds2.repository.LightBeposRepo;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,12 +15,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Data
+@Slf4j
 public class LightBeposService {
 
     private final LightBeposRepo lightBeposRepo;
-    private final ConsumptionBeposRepo consumptionBeposRepo;
-    private LocalDateTime dateTime = LocalDateTime.now();
 
 
     public Integer CalculatingEnergyConsumedLight(EquipmentBepos id) {

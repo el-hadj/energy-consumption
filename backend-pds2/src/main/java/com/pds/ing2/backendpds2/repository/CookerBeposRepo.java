@@ -12,5 +12,4 @@ import java.util.Optional;
 public interface CookerBeposRepo extends JpaRepository<CookerBepos,Integer> {
 
     Optional<CookerBepos> findByIdEquip(EquipmentBepos id);
-
 }

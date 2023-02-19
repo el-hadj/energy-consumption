@@ -2,7 +2,6 @@ package com.pds.ing2.backendpds2.service;
 
 import com.pds.ing2.backendpds2.model.CookerBepos;
 import com.pds.ing2.backendpds2.model.EquipmentBepos;
-import com.pds.ing2.backendpds2.model.LightBepos;
 import com.pds.ing2.backendpds2.repository.ConsumptionBeposRepo;
 import com.pds.ing2.backendpds2.repository.CookerBeposRepo;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,6 @@ public class CookerBeposService {
 
 
     private final CookerBeposRepo cookerBeposRepo;
-    private final ConsumptionBeposRepo consumptionBeposRepo;
-    private LocalDateTime dateTime = LocalDateTime.now();
 
     public Integer CalculatingEnergyConsumedCooker(EquipmentBepos id) {
         Integer energy = 0;
