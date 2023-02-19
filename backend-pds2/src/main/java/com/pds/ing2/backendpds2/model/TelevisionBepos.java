@@ -18,7 +18,7 @@ public class TelevisionBepos {
     private Integer id_tv;
 
     @Column(name = "state")
-    private String state;
+    private Boolean state;
 
     @Column(name = "power")
     private Integer power;

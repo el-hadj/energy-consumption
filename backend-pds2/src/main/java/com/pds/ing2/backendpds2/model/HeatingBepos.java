@@ -19,13 +19,7 @@ public class HeatingBepos {
     @Column(name = "thermostat")
     private Integer thermostat;
     @Column(name= "state")
-    private String state;
-    @Column(name="mode")
-    private String mode;
-    @Column(name= "hour_start")
-    private Integer hourStart;
-    @Column(name="hour_end")
-    private Integer hourEnd;
+    private Boolean state;
     @Column(name="temp_declench")
     private Integer tempDeclench;
     @OneToOne(cascade = CascadeType.ALL)
