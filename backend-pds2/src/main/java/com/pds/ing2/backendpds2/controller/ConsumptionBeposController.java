@@ -10,12 +10,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/consommation")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ConsumptionBeposController {
 
     private final ConsumptionBeposService consumptionBeposService;
 
 
-    @CrossOrigin(origins = { "http://localhost:9001"})
+
     @GetMapping()
     public List<Map<String, String>> getListEquipment(@RequestParam("idRoom") Integer id){
         return consumptionBeposService.getListEquipment(id);
