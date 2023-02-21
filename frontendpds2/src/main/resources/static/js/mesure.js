@@ -1,225 +1,22 @@
 //export const connexionBack2 = "172.31.250.13";
-
-
-function obtenirDonnees(equipement) {
-    // Faire une requête HTTP pour obtenir les données de consommation d'énergie pour l'équipement
-    const donnees = faireRequeteHTTP(`/equipements/${equipement}/donnees`);
-
-    // Extraire les dates/temps et les mesures de consommation d'énergie des données
-    const labels = donnees.map(donnee => donnee.date);
-    const donneesConsommation = donnees.map(donnee => donnee.consomMoy);
-
-    // Retourner les données formatées pour le graphe
-    return {
-        labels: labels,
-        donnees: donneesConsommation
-    };
-}
-
-function openModal(name, id) {
+function openModal(id, name) {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
-    const date = document.getElementById('date1').value;
     const form = document.getElementById("submit");
-    const modal2 = document.createElement('button');
+    //const modal2 = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
+    let nameLower = name.toLowerCase();
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', '#details');
-    if (name === "chauffage") {
-        form.onclick = function () {
-            fetch('http://172.31.250.13:9000/mesure/infoHeat?idEquip=' + id + '&date=' + date)
-                .then(response => response.json())
-                .then(data => {
-                    var invoiceDetailNode = document.getElementById('modal2');
-                    invoiceDetailNode.innerHTML = "";
-
-                    data.forEach(list => {
-                        var p = document.createElement("p");
-                        var text = document.createTextNode(`Date: ${list.start_time}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-
-                        p = document.createElement("p");
-                        text = document.createTextNode(`Consommation en WH: ${list.energy_power}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-                    });
-
-                })
-                .catch(error => console.log("Error "+ error));
-            modal2.style.display = 'none';
-            modal2.setAttribute('data-toggle', 'modal');
-            modal2.setAttribute('data-target', '#exampleModalToggle2');
-            container.appendChild(modal2);
-            modal2.click();
-            date.innerHTML = "";
-
+    if (nameLower === "chauffage") {
+        form.onclick = function updateState(newState) {
+            OnAndOffEquipment(id, nameLower);
         }
-    } else if (name === "lampe") {
-        form.onclick = function () {
-
-            fetch('http://172.31.250.13:9000/mesure/infoLight?idEquip=' + id + '&date=' + date)
-                .then(response => response.json())
-                .then(data => {
-                    var invoiceDetailNode = document.getElementById('modal2');
-                    invoiceDetailNode.innerHTML = "";
-
-                    data.forEach(list => {
-                        var p = document.createElement("p");
-                        var text = document.createTextNode(`Date: ${list.light_start_time}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-
-                        p = document.createElement("p");
-                        text = document.createTextNode(`Consommation en WH: ${list.energy_light}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-                    });
-
-                })
-                .catch(error => console.log("Error "+ error));
-            modal2.style.display = 'none';
-            modal2.setAttribute('data-toggle', 'modal');
-            modal2.setAttribute('data-target', '#exampleModalToggle2');
-            container.appendChild(modal2);
-            modal2.click();
-            date.innerHTML = "";
-
-        }
-    } else if (name === "lave") {
-        form.onclick = function () {
-
-            fetch('http://172.31.250.13:9000/mesure/infoLaundry?idEquip=' + id + '&date=' + date)
-                .then(response => response.json())
-                .then(data => {
-                    var invoiceDetailNode = document.getElementById('modal2');
-                    invoiceDetailNode.innerHTML = "";
-
-                    data.forEach(list => {
-                        var p = document.createElement("p");
-                        var text = document.createTextNode(`Date: ${list.laundry_time}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-
-                        p = document.createElement("p");
-                        text = document.createTextNode(`Consommation en WH: ${list.energy_laundry}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-                    });
-
-                })
-                .catch(error => console.log("Error "+ error));
-            modal2.style.display = 'none';
-            modal2.setAttribute('data-toggle', 'modal');
-            modal2.setAttribute('data-target', '#exampleModalToggle2');
-            container.appendChild(modal2);
-            modal2.click();
-            date.innerHTML = "";
-
-        }
-    } else if (name === "télévision") {
-        form.onclick = function () {
-            if (date !== "") {
-                fetch('http://172.31.250.13:9000/mesure/infoTv?idEquip=' + id + '&date=' + date)
-                    .then(response => response.json())
-                    .then(data => {
-                        var invoiceDetailNode = document.getElementById('modal2');
-                        invoiceDetailNode.innerHTML = "";
-
-                        data.forEach(list => {
-                            var p = document.createElement("p");
-                            var text = document.createTextNode(`Date: ${list.tv_time}`);
-                            p.appendChild(text);
-                            invoiceDetailNode.appendChild(p);
-
-                            p = document.createElement("p");
-                            text = document.createTextNode(`Consommation en WH: ${list.energy_tv}`);
-                            p.appendChild(text);
-                            invoiceDetailNode.appendChild(p);
-                        });
-
-                    })
-                    .catch(error => console.log("Error "+ error));
-                modal2.style.display = 'none';
-                modal2.setAttribute('data-toggle', 'modal');
-                modal2.setAttribute('data-target', '#exampleModalToggle2');
-                container.appendChild(modal2);
-                modal2.click();
-                date.innerHTML = "";
-            }
-        }
-    } else if (name === "cuisinière") {
-        form.onclick = function () {
-
-            fetch('http://172.31.250.13:9000/mesure/infoCook?idEquip=' + id + '&date=' + date)
-                .then(response => response.json())
-                .then(data => {
-                    var invoiceDetailNode = document.getElementById('modal2');
-                    invoiceDetailNode.innerHTML = "";
-
-                    data.forEach(list => {
-                        var p = document.createElement("p");
-                        var text = document.createTextNode(`Date: ${list.cook_time}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-
-                        p = document.createElement("p");
-                        text = document.createTextNode(`Consommation en WH: ${list.energy_cook}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-                    });
-
-                })
-                .catch(error => console.log("Error "+ error));
-            modal2.style.display = 'none';
-            modal2.setAttribute('data-toggle', 'modal');
-            modal2.setAttribute('data-target', '#exampleModalToggle2');
-            container.appendChild(modal2);
-            modal2.click();
-            date.innerHTML = "";
-
-        }
-    } else if (name === "congélateur") {
-        form.onclick = function () {
-
-            fetch('http://172.31.250.13:9000/mesure/infoFreez?idEquip=' + id + '&date=' + date)
-                .then(response => response.json())
-                .then(data => {
-                    var invoiceDetailNode = document.getElementById('modal2');
-                    invoiceDetailNode.innerHTML = "";
-
-                    data.forEach(list => {
-                        var p = document.createElement("p");
-                        var text = document.createTextNode(`Date: ${list.freez_time}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-
-                        p = document.createElement("p");
-                        text = document.createTextNode(`Consommation en WH: ${list.energy_freez}`);
-                        p.appendChild(text);
-                        invoiceDetailNode.appendChild(p);
-                    });
-
-                })
-                .catch(error => console.log("Error "+ error));
-            modal2.style.display = 'none';
-            modal2.setAttribute('data-toggle', 'modal');
-            modal2.setAttribute('data-target', '#exampleModalToggle2');
-            container.appendChild(modal2);
-            modal2.click();
-            date.innerHTML = "";
-
-        }
+        container.appendChild(button);
+        button.click();
     }
-
-
-    container.appendChild(button);
-    button.click();
 }
-
-
-
 
 
 function calculateConsoPiece(idRoom) {
@@ -269,8 +66,6 @@ function calculConsoTotal() {
 }
 
 
-
-
 function getEquipement(idRoom) {
     fetch('http://localhost:9000/consommation?idRoom=' + idRoom)
         .then(response => response.json())
@@ -278,15 +73,40 @@ function getEquipement(idRoom) {
             const equipmentData = document.getElementById('equipment-data'+idRoom);
             equipmentData.innerHTML = '';
             data.forEach(equipment => {
-                // const idCell = document.createElement('td');
-                // idCell.textContent = equipment.id_equipment;
+
 
                 const nameCell = document.createElement('td');
                 var button = document.createElement("button");
                 button.setAttribute("class", "btn text-capitalize");
                 button.setAttribute("style", "width: 150px; background-color:#796aee; color : white");
+                button.setAttribute("id", equipment.id_equipment);
+                button.setAttribute("name", equipment.nom_equipment);
+                button.setAttribute("onclick", "openModal(this.id, this.name)");
                 button.textContent = equipment.nom_equipment;
                 nameCell.appendChild(button);
+
+                const buttonCell = document.createElement('td');
+                var div = document.createElement("div");
+                div.setAttribute("class", "btn-group btn-toggle");
+
+
+                var buttonOn = document.createElement("button");
+                buttonOn.setAttribute("class", "On btn btn-sm btn-outline-primary active");
+                buttonOn.setAttribute("id",'buttonOn'+equipment.id_equipment);
+                buttonOn.setAttribute("name", equipment.nom_equipment);
+                buttonOn.setAttribute("onclick", "OnAndOffEquipment(this.id, this.name)");
+                buttonOn.textContent = "On";
+
+                var buttonOff = document.createElement("button");
+                buttonOff.setAttribute("class", "Off btn btn-sm btn-outline-primary");
+                buttonOff.setAttribute("id",'buttonOff'+equipment.id_equipment);
+                buttonOff.setAttribute("name", equipment.nom_equipment);
+                buttonOff.setAttribute("onclick", "OnAndOffEquipment(this.id, this.name)");
+                buttonOff.textContent = "Off";
+
+                div.appendChild(buttonOn);
+                div.appendChild(buttonOff);
+                buttonCell.appendChild(div);
 
 
                 const powerCell = document.createElement('td');
@@ -304,15 +124,113 @@ function getEquipement(idRoom) {
 
 
                 const row = document.createElement('tr');
-                //row.appendChild(idCell);
+
                 row.appendChild(nameCell);
+                row.appendChild(buttonCell);
                 row.appendChild(powerCell);
+
 
                 equipmentData.appendChild(row);
             });
         });
 
 }
+
+function OnAndOffEquipment(id, name){
+    let state = true;
+    let nameLower = name.toLowerCase();
+    let buttonOn = document.querySelectorAll('.On')
+    let buttonOff = document.querySelectorAll('.Off')
+    for (let i = 0; i < buttonOn.length; i++) {
+        if(nameLower == "chauffage"){
+            let idE = buttonOn[i].id.split("On")[1];
+            buttonOn[i].addEventListener("click", () => {
+                state = true;
+                buttonOn[i].classList.add("active");
+                buttonOff[i].classList.remove("active");
+                buttonOn[i].disabled = true; // Disable the On button
+                buttonOff[i].disabled = false; // Enable the Off button
+                updateStatus(idE,"heating", state);
+            });
+            buttonOff[i].addEventListener("click", () => {
+                state = false;
+                buttonOff[i].classList.add("active");
+                buttonOn[i].classList.remove("active");
+                buttonOff[i].disabled = true; // Disable the Off button
+                buttonOn[i].disabled = false;
+                updateStatus(idE,"heating", state)
+            });
+        }else if(nameLower == "lampe"){
+            let id = buttonOn[i].id.split("On")[1]
+            buttonOn[i].addEventListener("click", () => {
+                state = true;
+                buttonOn[i].classList.add("active");
+                buttonOff[i].classList.remove("active");
+                buttonOn[i].disabled = true; // Disable the On button
+                buttonOff[i].disabled = false; // Enable the Off button
+                updateStatus(id,"light", state)
+            });
+            buttonOff[i].addEventListener("click", () => {
+                state = false;
+                buttonOff[i].classList.add("active");
+                buttonOn[i].classList.remove("active");
+                buttonOff[i].disabled = true; // Disable the Off button
+                buttonOn[i].disabled = false;
+                updateStatus(id,"light", state)
+            });
+        }else if(nameLower == "cusinière"){
+            let id = buttonOn[i].id.split("On")[1]
+            buttonOn[i].addEventListener("click", () => {
+                state = true;
+                buttonOn[i].classList.add("active");
+                buttonOff[i].classList.remove("active");
+                buttonOn[i].disabled = true; // Disable the On button
+                buttonOff[i].disabled = false; // Enable the Off button
+                updateStatus(id,"cooker", state)
+            });
+            buttonOff[i].addEventListener("click", () => {
+                state = false;
+                buttonOff[i].classList.add("active");
+                buttonOn[i].classList.remove("active");
+                buttonOff[i].disabled = true; // Disable the Off button
+                buttonOn[i].disabled = false;
+                updateStatus(id,"cooker", state)
+            });
+        }else if(nameLower == "télévision"){
+            let id = buttonOn[i].id.split("On")[1]
+            buttonOn[i].addEventListener("click", () => {
+                state = true;
+                buttonOn[i].classList.add("active");
+                buttonOff[i].classList.remove("active");
+                buttonOn[i].disabled = true; // Disable the On button
+                buttonOff[i].disabled = false; // Enable the Off button
+                updateStatus(id,"tv", state)
+            });
+            buttonOff[i].addEventListener("click", () => {
+                state = false;
+                buttonOff[i].classList.add("active");
+                buttonOn[i].classList.remove("active");
+                buttonOff[i].disabled = true; // Disable the Off button
+                buttonOn[i].disabled = false;
+                updateStatus(id,"tv", state)
+            });
+        }
+
+    }
+}
+
+function updateStatus(id, equipment, state){
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state)
+    };
+    const url = 'http://localhost:9000/'+equipment+'/'+id+'/state';
+    console.log("je suis "+ url);
+    fetch(url, requestOptions)
+        .then(() => console.log("j'ai update l'etat :" + state));
+}
+
 
 function refreshPower(idRoom){
     fetch('http://localhost:9000/consommation?idRoom=' + idRoom)
@@ -334,12 +252,44 @@ function test() {
         refreshPower(id);
     }
     var idPiece = document.querySelectorAll(".sum");
-    for (var i = 0; i < idPiece.length; i++) {
-        calculateConsoPiece((idPiece[i].attributes.id.value).split('m')[1]);
+    for (var j = 0; j < idPiece.length; j++) {
+        calculateConsoPiece((idPiece[j].attributes.id.value).split('m')[1]);
     }
     calculConsoTotal()
 }
 
+function genererGrapheLineaire(equipement) {
+    const donnees = obtenirDonnees(equipement);
+    const canvas = document.createElement('canvas');
+    canvas.id = 'graphique';
+    document.body.appendChild(canvas);
+    const graphique = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: donnees.labels, // Les dates ou heures correspondant aux mesures
+            datasets: [{
+                label: 'Consommation énergétique', // Le nom de l'équipement
+                data: donnees.donnees, // Les mesures de consommation d'énergie
+                borderColor: 'rgb(255, 99, 132)',
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+
+function obtenirDonnees(equipement) {
+    const donnees = faireRequeteHTTP(`/equipements/${equipement}/donnees`);
+    const labels = donnees.map(donnee => donnee.date);
+    const donneesConsommation = donnees.map(donnee => donnee.consomMoy);
+    return {
+        labels: labels,
+        donnees: donneesConsommation
+    };
+}
 
 
 
