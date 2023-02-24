@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div th:replace="Menu :: header">...</div>
+<!--ajout du menu-->
+
+<header class="container-fluid">
+    <div class="row">
+        <div class="m-3 col-5 shadow-sm px-4 py-3 card card-header" style="background-color:#f0f8ff ">
+            <h2 class="m-2 p-1 border-top-0 rounded">Bienvenue dans votre espace de Production </h2>
+        </div>
+        <div class="col-5">
+            <div class="card card-header m-3" style="background-color:#f0f8ff">
+                <span><H4> Production globale</H4></span>
+                <span id="consoTotal" onload="calculConsoTotal()" style="font-size: 4em"></span>
+                <span>WH</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+</body>
+</html>
