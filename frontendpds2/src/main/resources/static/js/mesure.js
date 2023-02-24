@@ -1,24 +1,4 @@
 //export const connexionBack2 = "172.31.250.13";
-function openModal(id, name) {
-    const container = document.getElementById('main-container');
-    const button = document.createElement('button');
-    const form = document.getElementById("submit");
-    //const modal2 = document.createElement('button');
-    button.type = 'button';
-    button.style.display = 'none';
-    let nameLower = name.toLowerCase();
-    button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#details');
-    if (nameLower === "chauffage") {
-        form.onclick = function updateState(newState) {
-            OnAndOffEquipment(id, nameLower);
-        }
-        container.appendChild(button);
-        button.click();
-    }
-}
-
-
 function calculateConsoPiece(idRoom) {
     var bod = document.getElementById("sum" + idRoom);
     var listVal = document.querySelectorAll(".cons" + idRoom);
@@ -142,7 +122,7 @@ function OnAndOffEquipment(id, name){
     let buttonOn = document.querySelectorAll('.On')
     let buttonOff = document.querySelectorAll('.Off')
     for (let i = 0; i < buttonOn.length; i++) {
-        if(nameLower == "chauffage"){
+        if(nameLower === "chauffage"){
             let idE = buttonOn[i].id.split("On")[1];
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -160,7 +140,7 @@ function OnAndOffEquipment(id, name){
                 buttonOn[i].disabled = false;
                 updateStatus(idE,"heating", state)
             });
-        }else if(nameLower == "lampe"){
+        }else if(nameLower === "lampe"){
             let id = buttonOn[i].id.split("On")[1]
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -178,7 +158,7 @@ function OnAndOffEquipment(id, name){
                 buttonOn[i].disabled = false;
                 updateStatus(id,"light", state)
             });
-        }else if(nameLower == "cusinière"){
+        }else if(nameLower === "cuisinière"){
             let id = buttonOn[i].id.split("On")[1]
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -196,7 +176,7 @@ function OnAndOffEquipment(id, name){
                 buttonOn[i].disabled = false;
                 updateStatus(id,"cooker", state)
             });
-        }else if(nameLower == "télévision"){
+        }else if(nameLower === "télévision"){
             let id = buttonOn[i].id.split("On")[1]
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -256,30 +236,9 @@ function test() {
         calculateConsoPiece((idPiece[j].attributes.id.value).split('m')[1]);
     }
     calculConsoTotal()
+
 }
 
-function genererGrapheLineaire(equipement) {
-    const donnees = obtenirDonnees(equipement);
-    const canvas = document.createElement('canvas');
-    canvas.id = 'graphique';
-    document.body.appendChild(canvas);
-    const graphique = new Chart(canvas, {
-        type: 'line',
-        data: {
-            labels: donnees.labels, // Les dates ou heures correspondant aux mesures
-            datasets: [{
-                label: 'Consommation énergétique', // Le nom de l'équipement
-                data: donnees.donnees, // Les mesures de consommation d'énergie
-                borderColor: 'rgb(255, 99, 132)',
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-}
 
 function obtenirDonnees(equipement) {
     const donnees = faireRequeteHTTP(`/equipements/${equipement}/donnees`);
@@ -291,6 +250,45 @@ function obtenirDonnees(equipement) {
     };
 }
 
+function getConsommationParJour(){
+    fetch('http://localhost:9000/consommation/parjour')
+        .then(response => response.json())
+        .then(data => {
+            const labels = Object.keys(data);
+            const values = Object.values(data);
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Consommation par jour',
+                        data: values,
+                        backgroundColor: 'rgba(0, 119, 204, 0.3)',
+                        borderColor: 'rgba(0, 119, 204, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + ' WH';
+
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    getConsommationParJour();
+})
 
 
 

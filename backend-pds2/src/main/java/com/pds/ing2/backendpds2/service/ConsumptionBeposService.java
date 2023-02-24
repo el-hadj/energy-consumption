@@ -13,8 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +38,7 @@ public class ConsumptionBeposService {
     private final TelevisonBeposService televisonBeposService;
 
 
-    @Scheduled(fixedRate = 4000)
+    //@Scheduled(fixedRate = 4000)
     private void addConsumption() {
         List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
         if (equipmentBepos != null) {
@@ -80,6 +80,24 @@ public class ConsumptionBeposService {
 
     public List<Map<String, String>> getListEquipment(Integer id){
         return consumptionBeposRepo.getEquipementByIdRoom(id);
+    }
+
+    public Map<String, Integer> getConsommationParJour() {
+        Map<String, Integer> consommationParJour = new TreeMap<>();
+        List<ConsumptionBepos> consommations = consumptionBeposRepo.findAll();
+
+        for (ConsumptionBepos consommation : consommations) {
+            LocalDateTime startTime = consommation.getStartTime();
+            String jour = startTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+            int energyPower = consommation.getEnergyPower();
+            if (consommationParJour.containsKey(jour)) {
+                energyPower += consommationParJour.get(jour);
+            }
+            consommationParJour.put(jour, energyPower);
+        }
+
+        return consommationParJour;
     }
 
 

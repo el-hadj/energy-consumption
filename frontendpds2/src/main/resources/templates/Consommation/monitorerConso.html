@@ -17,7 +17,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <link rel="stylesheet"  href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet"
+          href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css"/>
 
     <title>Consommation</title>
     <script src="../../static/js/mesure.js"></script>
@@ -37,7 +38,7 @@
 <header class="container-fluid">
     <div class="row">
         <div class="m-3 col-5 shadow-sm px-4 py-3 card card-header" style="background-color:#f0f8ff ">
-            <h2 class="m-2 p-1 border-top-0 rounded">Bienvenue dans votre espace BEPOS </h2>
+            <h2 class="m-2 p-1 border-top-0 rounded">Bienvenue dans votre espace de Consommation </h2>
         </div>
         <div class="col-5">
             <div class="card card-header m-3" style="background-color:#f0f8ff">
@@ -99,7 +100,8 @@
                                      th:id="'collapseThree' +${pieces.idRoom}">
                                     <div th:class="'card-body ' +${pieces.roomType}"
                                          th:id="'pieces'+${pieces.idRoom}">
-                                        <table th:id="'equipment-table'+${pieces.idRoom}" class="table table-borderless" style="margin-left: 3em">
+                                        <table th:id="'equipment-table'+${pieces.idRoom}" class="table table-borderless"
+                                               style="margin-left: 3em">
                                             <tbody th:id="'equipment-data'+${pieces.idRoom}">
                                             </tbody>
                                         </table>
@@ -136,106 +138,25 @@
 
 <!--ici sera l'activité d'une pieces -->
 <div class="row">
-
-    <div class="col-md-8">
-        <div id="kill">
-            <canvas id="lineChartExample" style="max-height: 500px"></canvas>
+    <div class="m-3 col-5 shadow-sm px-4 py-3 card card-header" style="background-color:#f0f8ff ">
+        <h2 class="m-2 p-1 border-top-0 rounded">Graphe de la consommation totale</h2>
+    </div>
+    <div class="col-md-8 m-3 shadow-sm px-4 py-3 border border-secondary" >
+        <div id="graph">
+            <canvas id="lineChart" style="max-height: 500px"></canvas>
         </div>
     </div>
-    <!--ici sera la production d'une pieces -->
-    <!--div class="col-md-4 card text-capitalize" style="font-weight:bold; font-size:20px; max-height: 230px">
-        <div class="card-header mr-1"> Production de ma maison</div>
-        <div class="card-body">
-            <div class="card">
-                <div class="card-header" id="headingProd">
-                    <span hidden id="user" th:value="${users}"></span>
-                    <h5 class="mb-0">
-                        <button aria-expanded="false" class="btn " data-toggle="collapse"
-                                th:attr="data-target='#collapseProd' +${users}, aria-controls='collapseProd' +${users}"
-                                th:id="'prod'+${users}"
-                                th:onclick="production()"
-                        >Type de Production
-                        </button>
-                    </h5>
-                </div>
-                <div aria-labelledby="headingProd" class="collapse"
-                     th:id="'collapseProd' +${users}">
-                    <div class="card-body" th:id="'production'+${users}">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div-->
-    <!-- je terminé l'activité -->
-
-    <!-- Modal -->
-    <!-- Modal -->
-    <div class="modal fade" id="details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Statut de l'équipement</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id = "form" action="/static" method="get">
-                        <div class="form-group">
-                            <div id ="modal2" class="modal-body">
-                                <div class="btn-group btn-toggle">
-                                    <button class="btn btn-sm btn-outline-primary active">On</button>
-                                    <button class="btn btn-sm btn-outline-primary">Off</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-secondary" id= "submit" data-dismiss="modal">OK</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- second modal-->
-
-    <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalToggleLabel2">Information de l'équipement </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 
 
-
-    <script th:inline="javascript">
-        $('#date1').datepicker({
-            dateFormat: "yy-mm-dd",
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-        });
-
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script crossorigin="anonymous"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.19.1/dist/locale/bootstrap-table-fr-FR.min.js"></script>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.19.1/dist/locale/bootstrap-table-fr-FR.min.js"></script>
 
 
 </body>

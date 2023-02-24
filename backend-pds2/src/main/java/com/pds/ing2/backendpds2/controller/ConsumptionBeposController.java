@@ -23,4 +23,8 @@ public class ConsumptionBeposController {
     }
     
 
+    @GetMapping("/parjour")
+    public Map<String, Integer> consumptionDay(){
+        return consumptionBeposService.getConsommationParJour();
+    }
 }
