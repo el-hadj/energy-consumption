@@ -271,15 +271,18 @@ function getConsommationParJour(){
                 },
                 options: {
                     scales: {
-                        yAxes: [{
-                            beginAtZero: true,
+                        y: {
                             ticks: {
-                                callback: function (value) {
-                                    return value + ' WH';
-
+                                beginAtZero: true,
+                                callback: function(value, index, values) {
+                                    return value + ' Wh';
                                 }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Consommation (Wh)'
                             }
-                        }]
+                        }
                     }
                 }
             });
