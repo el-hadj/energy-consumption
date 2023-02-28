@@ -26,7 +26,7 @@ public class MesureBeposController {
         List<Map<String, String>> listval = service.roomlistservice(id);
         model.addAttribute("listepiece", listval);
         model.addAttribute("users", id);
-        return "Consommation/monitorerConso" ;
+        return "monitorerConso" ;
     }
 
 

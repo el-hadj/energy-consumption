@@ -12,6 +12,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -83,9 +87,17 @@ public class ConsumptionBeposService {
     }
 
     public Map<String, Integer> getConsommationParJour() {
-        Map<String, Integer> consommationParJour = new TreeMap<>();
+        Map<String, Integer> consommationParJour = new TreeMap<>(new Comparator<String>() {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            public int compare(String date1, String date2) {
+                try {
+                    return dateFormat.parse(date1).compareTo(dateFormat.parse(date2));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
         List<ConsumptionBepos> consommations = consumptionBeposRepo.findAll();
-
         for (ConsumptionBepos consommation : consommations) {
             LocalDateTime startTime = consommation.getStartTime();
             String jour = startTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

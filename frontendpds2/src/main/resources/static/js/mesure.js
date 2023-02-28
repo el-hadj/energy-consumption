@@ -264,20 +264,14 @@ function getConsommationParJour(){
                     datasets: [{
                         label: 'Consommation par jour',
                         data: values,
-                        backgroundColor: 'rgba(0, 119, 204, 0.3)',
-                        borderColor: 'rgba(0, 119, 204, 1)',
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        borderColor: 'rgb(54, 162, 235)',
                         borderWidth: 1
                     }]
                 },
                 options: {
                     scales: {
                         y: {
-                            ticks: {
-                                beginAtZero: true,
-                                callback: function(value, index, values) {
-                                    return value + ' Wh';
-                                }
-                            },
                             title: {
                                 display: true,
                                 text: 'Consommation (Wh)'

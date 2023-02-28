@@ -10,9 +10,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +42,7 @@ public class ProductionBeposService {
         return productionBeposRepo.getAllProduction();
     }
 
-    @Scheduled(fixedRate = 4000)
+    //@Scheduled(fixedRate = 4000)
     private void getProduction() {
         List<SourceProduction> source = sourceProductionRepo.findAll();
         if (source != null) {
@@ -61,5 +68,31 @@ public class ProductionBeposService {
         }else {
             log.info("il n'y a pas de production");
         }
+    }
+
+    public Map<String, Double> getProductionDay() {
+        Map<String, Double> ProductionDay =new TreeMap<>(new Comparator<String>() {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            public int compare(String date1, String date2) {
+                try {
+                    return dateFormat.parse(date1).compareTo(dateFormat.parse(date2));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
+        List<ProductionBepos> productionBepos = productionBeposRepo.findAll();
+
+        for (ProductionBepos p : productionBepos) {
+            LocalDateTime startTime = p.getDateProd();
+            String jour = startTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+            Double energyPower = p.getQuantity();
+            if (ProductionDay.containsKey(jour)) {
+                energyPower += ProductionDay.get(jour);
+            }
+            ProductionDay.put(jour, energyPower);
+        }
+        return ProductionDay;
     }
 }
