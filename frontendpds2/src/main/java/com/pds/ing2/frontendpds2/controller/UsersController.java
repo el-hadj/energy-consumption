@@ -30,13 +30,11 @@ public class UsersController {
     @GetMapping("/checkUser")
     public String checkUser(@RequestParam(name = "email") String email, Model model, HttpSession session) {
         Boolean verfiUser = services.checkUser(email);
-
         if (verfiUser) {
             Users u1 = services.getUser(email);
             session.setAttribute("id", u1.getId());
             session.setAttribute("lastName", u1.getLastName());
             session.setAttribute("firstName", u1.getFirstName());
-
             return "homePage";
         } else
             return "login";

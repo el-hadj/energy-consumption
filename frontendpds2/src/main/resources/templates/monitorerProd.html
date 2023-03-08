@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script th:src="@{/js/script.js}"></script>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/prod.css}"/>
     <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <title>Document</title>
@@ -14,30 +15,44 @@
 <body>
 <div th:replace="Menu :: header">...</div>
 <!--ajout du menu-->
+
 <header class="container-fluid">
-    <div class="row">
-        <div class="m-3 col-4 shadow-sm px-4 py-3 card card-header" style="background-color:#f0f8ff ">
+    <div class="row align-items-stretch d-flex">
+        <div class="m-3 col-4 shadow-sm px-4 py-3 card card-header" style="background-color:#f0f8ff">
             <h2 class="m-2 p-1 border-top-0 rounded">Bienvenue dans votre espace de Production </h2>
         </div>
-        <div class="col-4">
-            <div class="card card-header m-3" style="background-color:#f0f8ff">
-                <span><H4> Production totale</H4></span>
-                <span id="prodTotal" style="font-size: 4em"></span>
-                <span>KWh</span>
-            </div>
+        <div class="col-4 card card-header m-3" style="background-color:#f0f8ff">
+            <span><H4> Production totale</H4></span>
+            <span id="prodTotal" style="font-size: 4em"></span>
+            <span>KWh</span>
         </div>
-        <div class="col-2 card card-header m-3">
-            puissance
+        <div class="col-2 card card-header m-3" style="background-color:#f0f8ff">
+            <div class="weather-info d-flex flex-column align-items-center justify-content-center">
+                <div class="temperature">
+                    <img src="/images/soleil.png" alt="Cloud Sunny">
+                    <span class="value">22</span>
+                    <span class="unit">&deg;C</span>
+                </div>
+                <div class="wind-info">
+                    <img src="/images/vent.png" alt="Cloud Sunny">
+                    <!--span class="wind-direction">NE</span-->
+                    <span class="wind-speed">10</span>
+                    <span class="unit">KM/H</span>
+                </div>
+            </div>
         </div>
     </div>
 </header>
 
-<div class="card mb-6 d-flex justify-content-center m-1" >
+
+<!-- fin menu -->
+
+<div class="card mb-6 d-flex justify-content-center m-1">
     <div class="card-header text-capitalize" style="font-size:20px">
         <span> Source de production de votre maison</span>
     </div>
     <div class="card-body">
-        <table id="myTable" class="table table-borderless">
+        <table id="myTable" class="table table-bordered table-striped">
             <thead>
             <tr>
                 <th>Source de Production</th>
@@ -69,7 +84,9 @@
         <div class="card">
             <div class="card-header">Production globale</div>
             <div class="card-body">
-                <canvas id="lineChart" style="max-height: 500px"></canvas>
+                <canvas id="lineChartProd" style="max-height: 500px"></canvas>
+                <input onchange="filterDataProd()" type="date" id="start-date-prod">
+                <input onchange="filterDataProd()" type="date" id="end-date-prod">
             </div>
         </div>
     </div>
@@ -82,11 +99,12 @@
         </div>
     </div>
 </div>
+<br><br>
 
 
-
-
-
+<footer>
+    <div><br> <br></div>
+</footer>
 
 
 </body>

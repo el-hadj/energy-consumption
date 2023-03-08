@@ -26,5 +26,6 @@ public class HeatingBepos {
     @JoinColumn(name = "id_equip", referencedColumnName = "id_equipment")
     @JsonBackReference
     private EquipmentBepos idEquip;
+    private Double level;
 
 }

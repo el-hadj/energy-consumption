@@ -24,7 +24,7 @@ public class CookerBeposService {
         CookerBepos cookerBepos = cookerBeposRepo.findByIdEquip(id)
                 .orElseThrow(() -> new RuntimeException(" cette cuisinière avec l'id " + id + " n'existe pas "));
         if (cookerBepos.getState()) {
-            energy += cookerBepos.getPower() * 1;
+            energy += cookerBepos.getPower() * 2;
             return energy;
         }else {
             return 0;

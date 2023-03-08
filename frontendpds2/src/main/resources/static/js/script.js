@@ -20,9 +20,9 @@ function getProductionDay(){
         .then(data => {
             const labels = Object.keys(data);
             const values = Object.values(data);
-            const ctx = document.getElementById('lineChart').getContext('2d');
+            const ctx = document.getElementById('lineChartProd').getContext('2d');
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
@@ -44,6 +44,42 @@ function getProductionDay(){
                     }
                 }
             });
+        });
+}
+
+function filterDataProd() {
+    // Obtenez les dates sélectionnées par l'utilisateur
+    const startDate = document.getElementById('start-date-prod').value;
+    const endDate = document.getElementById('end-date-prod').value;
+
+    // Convertissez les dates en objets Date
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Obtenez les données de consommation
+    fetch('http://localhost:9000/production/parjour')
+        .then(response => response.json())
+        .then(data => {
+            // Filtrer les données en fonction de la plage de dates sélectionnée
+            const filteredData = Object.entries(data)
+                .filter(([dateStr, value]) => {
+                    const [day, month, year] = dateStr.split('/'); // Extraction des parties de date
+                    const date = new Date(year, month - 1, day); // Création d'un objet Date à partir des parties de date
+                    return date >= start && date <= end;
+                })
+                .reduce((acc, [dateStr, value]) => {
+                    acc[dateStr] = value;
+                    return acc;
+                }, {});
+            // Obtenir les étiquettes et les valeurs filtrées
+            const labels = Object.keys(filteredData);
+            const values = Object.values(filteredData);
+
+            // Mettre à jour le graphique avec les données filtrées
+            const chart = Chart.getChart('lineChartProd');
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = values;
+            chart.update();
         });
 }
 

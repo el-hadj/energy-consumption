@@ -26,22 +26,8 @@
             </div>
             <div class="col-lg-6 bg-white">
               <div class="d-flex align-items-center px-4 px-lg-5 h-100">
-                <div th:if="${session.idCompany != null && session.idCompanyForSg != null}">
-                  <h2>Vous êtes connecté en tant que <span th:text="${session.type}"></span> de l'entreprise <span th:text="${session.company_name}"></span> et avez comme droit <span th:text="${session.droit}"></span></h2>
-                  <p>Vous pouvez effectuer des réservations d'espace. Configurez vos équipements. Réserver un PRT et visualiser votre course.
-                  <br> Suivre votre consommation énergétique personnelle où bien celle des employés de votre entreprise. <br> Visualiser un historique des alertes
-                    de surconsommation d'énergie.</p>
-                </div>
-                <div th:if="${session.idCompany != null && session.idCompanyForSg == null}">
-                  <h2>Vous êtes connecté en tant que <span th:text="${session.type}"></span> de l'entreprise <span th:text="${session.company_name}"></span> et avez comme droit <span th:text="${session.droit}"></span></h2>
-                  <p>Vous pouvez effectuer des réservations d'espace. Configurez vos équipements. Réserver un PRT et visualiser votre course.
-                    <br> Suivre votre consommation énergétique personnelle </p>
-                </div>
-                <div th:if="${session.services_regulations != null}">
-                  <h2>Vous êtes connecté en tant que <span th:text="${session.type}"></span></h2>
-                </div>
-                <div th:if="${session.habitant != null}">
-                  <h2>Vous êtes connecté en tant que <span th:text="${session.type}"></span></h2>
+                <div>
+                  <h2>Vous êtes connecté en tant que <span>Habitant</span></h2>
                 </div>
               </div>
             </div>

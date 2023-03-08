@@ -28,7 +28,7 @@ public class HeatingService {
         HeatingBepos heatingBepos = heatingBeposRepo.findByIdEquip(id)
                 .orElseThrow(() -> new RuntimeException(" ce chauffage avec l'id " + id + " n'existe pas "));
         if (heatingBepos.getState()) {
-            Double power = heatingBepos.getThermostat() + (Math.random() * 100 - 50);
+            Double power = heatingBepos.getThermostat() / heatingBepos.getLevel();
             energy = power.intValue();
             return energy;
         }else {

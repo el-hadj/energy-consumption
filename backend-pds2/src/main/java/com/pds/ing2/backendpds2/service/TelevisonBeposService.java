@@ -22,7 +22,7 @@ public class TelevisonBeposService {
         TelevisionBepos televisionBepos = televisionBeposRepo.findByIdEquip(id)
                 .orElseThrow(() -> new RuntimeException(" cette Télé avec l'id " + id + " n'existe pas "));
         if (televisionBepos.getState()) {
-            Double power = televisionBepos.getPower() + (Math.random() * 20 - 10);
+            Double power = televisionBepos.getPower() * 2.0;
             energy = power.intValue();
             return energy;
         } else {

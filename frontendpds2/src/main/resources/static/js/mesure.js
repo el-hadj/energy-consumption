@@ -17,8 +17,6 @@ function calculateConsoPiece(idRoom) {
         } else {
             bod.innerHTML += energyTotal + " WH";
         }
-
-
     } else {
         bod.innerHTML += 0;
     }
@@ -42,7 +40,6 @@ function calculConsoTotal() {
     } else {
         body.innerHTML += consoTotal;
     }
-
 }
 
 
@@ -92,7 +89,7 @@ function getEquipement(idRoom) {
                 const powerCell = document.createElement('td');
                 var span = document.createElement("span");
                 span.setAttribute("style", "width: 100px; text-align: right");
-                span.setAttribute("class", "cons"+idRoom);
+                span.setAttribute("class", "p cons"+idRoom);
                 span.setAttribute("id",'power'+equipment.id_equipment);
                 span.textContent = equipment.energy_power;
 
@@ -223,12 +220,13 @@ function refreshPower(idRoom){
         });
 }
 
-const loader = setInterval(test, 5000);
+setInterval(test, 5000);
 
 function test() {
-    var idcons = document.querySelectorAll(".cons");
+    var idcons = document.querySelectorAll(".pieces");
     for (var i = 0; i < idcons.length; i++) {
-        var id = (idcons[i].attributes.class.value).split(' ')[1]
+        var id = (idcons[i].attributes.id.value).split('s')[1]
+        console.log("refresh"+id);
         refreshPower(id);
     }
     var idPiece = document.querySelectorAll(".sum");
@@ -236,19 +234,8 @@ function test() {
         calculateConsoPiece((idPiece[j].attributes.id.value).split('m')[1]);
     }
     calculConsoTotal()
-
 }
 
-
-function obtenirDonnees(equipement) {
-    const donnees = faireRequeteHTTP(`/equipements/${equipement}/donnees`);
-    const labels = donnees.map(donnee => donnee.date);
-    const donneesConsommation = donnees.map(donnee => donnee.consomMoy);
-    return {
-        labels: labels,
-        donnees: donneesConsommation
-    };
-}
 
 function getConsommationParJour(){
     fetch('http://localhost:9000/consommation/parjour')
@@ -280,6 +267,42 @@ function getConsommationParJour(){
                     }
                 }
             });
+        });
+}
+
+function filterData() {
+    // Obtenez les dates sélectionnées par l'utilisateur
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+
+    // Convertissez les dates en objets Date
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Obtenez les données de consommation
+    fetch('http://localhost:9000/consommation/parjour')
+        .then(response => response.json())
+        .then(data => {
+            // Filtrer les données en fonction de la plage de dates sélectionnée
+            const filteredData = Object.entries(data)
+                .filter(([dateStr, value]) => {
+                    const [day, month, year] = dateStr.split('/'); // Extraction des parties de date
+                    const date = new Date(year, month - 1, day); // Création d'un objet Date à partir des parties de date
+                    return date >= start && date <= end;
+                })
+                .reduce((acc, [dateStr, value]) => {
+                    acc[dateStr] = value;
+                    return acc;
+                }, {});
+            // Obtenir les étiquettes et les valeurs filtrées
+            const labels = Object.keys(filteredData);
+            const values = Object.values(filteredData);
+
+            // Mettre à jour le graphique avec les données filtrées
+            const chart = Chart.getChart('lineChart');
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = values;
+            chart.update();
         });
 }
 

@@ -27,12 +27,11 @@ public class LightBeposService {
         LightBepos lightBepos = lightBeposRepo.findByIdEquip(id)
                 .orElseThrow(() -> new RuntimeException(" cette lampe avec l'id " + id + " n'existe pas "));
         if (lightBepos.getState()) {
-            energy += lightBepos.getIntensity() * 1;
+            energy += lightBepos.getIntensity() * 2;
             return energy;
         }else {
             return 0;
         }
-
     }
 
     @Transactional
