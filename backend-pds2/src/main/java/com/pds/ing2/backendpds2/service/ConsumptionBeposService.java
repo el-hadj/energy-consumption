@@ -42,7 +42,7 @@ public class ConsumptionBeposService {
     private final TelevisonBeposService televisonBeposService;
 
 
-    //@Scheduled(fixedRate = 4000)
+    @Scheduled(fixedRate = 4000)
     private void addConsumption() {
         List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
         if (equipmentBepos != null) {
