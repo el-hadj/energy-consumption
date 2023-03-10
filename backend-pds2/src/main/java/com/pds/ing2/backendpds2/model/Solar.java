@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Solar {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,7 +21,7 @@ public class Solar {
     @Column(name = "puissance_nominale")
     private double puissanceNominale;
     @Column(name = "ensoleillement")
-    private double ensoleillement;
+    private Double ensoleillement;
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_source", referencedColumnName = "id")
     @JsonBackReference

@@ -42,8 +42,8 @@ public class ConsumptionBeposService {
     private final TelevisonBeposService televisonBeposService;
 
 
-    @Scheduled(fixedRate = 4000)
-    private void addConsumption() {
+    @Scheduled(fixedRate = 5000)
+    public void addConsumption() {
         List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
         if (equipmentBepos != null) {
             for (EquipmentBepos e : equipmentBepos) {
@@ -74,9 +74,10 @@ public class ConsumptionBeposService {
                         consumptionBeposRepo.save(consumptionBepos4);
                         break;
                 }
-                LocalDateTime newdate = dateTime.plusHours(1);
-                setDateTime(newdate);
+
             }
+            LocalDateTime newdate = dateTime.plusHours(1);
+            setDateTime(newdate);
         }else {
             log.info("il n'y a pas d'équipement");
         }

@@ -1,19 +1,20 @@
 package com.pds.ing2.backendpds2.service;
 
-import com.pds.ing2.backendpds2.model.*;
+import com.pds.ing2.backendpds2.model.Eolienne;
+import com.pds.ing2.backendpds2.model.ProductionBepos;
+import com.pds.ing2.backendpds2.model.Solar;
+import com.pds.ing2.backendpds2.model.SourceProduction;
 import com.pds.ing2.backendpds2.repository.ProductionBeposRepo;
 import com.pds.ing2.backendpds2.repository.SourceProductionRepo;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -43,7 +44,7 @@ public class ProductionBeposService {
     }
 
     //@Scheduled(fixedRate = 4000)
-    private void getProduction() {
+    public void getProduction() {
         List<SourceProduction> source = sourceProductionRepo.findAll();
         if (source != null) {
             for (SourceProduction s : source) {
@@ -62,9 +63,10 @@ public class ProductionBeposService {
                         productionBeposRepo.save(solaire);
                         break;
                 }
-                LocalDateTime newdate = dateTime.plusHours(1);
-                setDateTime(newdate);
+
             }
+            LocalDateTime newdate = dateTime.plusDays(1);
+            setDateTime(newdate);
         }else {
             log.info("il n'y a pas de production");
         }
@@ -94,5 +96,21 @@ public class ProductionBeposService {
             ProductionDay.put(jour, energyPower);
         }
         return ProductionDay;
+    }
+
+    public Double vitesse(Integer id){
+        return eolienneService.getVitesse(id);
+    }
+
+    public Double ensoleil(Integer id){
+        return solarService.getEnsolleillement(id);
+    }
+
+    public Solar updateEnso(Integer id, Double enso){
+        return solarService.updateSolarEnsoleillement(id, enso);
+    }
+
+    public Eolienne updateVitess(Integer id, Double vitesse){
+        return eolienneService.updateEolienneVitesseVent(id, vitesse);
     }
 }

@@ -14,6 +14,26 @@ function getTotalQuantity() {
     }
 }
 
+function updateTemperature() {
+    fetch('http://localhost:9000/production/temp')
+        .then(response => response.json())
+        .then(data => {
+            const temperatureSpan = document.querySelector('.temperature .value');
+            temperatureSpan.textContent = data;
+        })
+        .catch(error => console.error(error));
+}
+
+function updateWind() {
+    fetch('http://localhost:9000/production/vent')
+        .then(response => response.json())
+        .then(data => {
+            const windSpan = document.querySelector('.wind-info .wind-speed');
+            windSpan.textContent = data;
+        })
+        .catch(error => console.error(error));
+}
+
 function getProductionDay(){
     fetch('http://localhost:9000/production/parjour')
         .then(response => response.json())
@@ -130,9 +150,43 @@ function productionConsumptionGraph(){
         })
 }
 
+function pollProductionData() {
+    fetch('/production/data')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#myTable tbody');
+            data.forEach(product => {
+                const row = tableBody.querySelector(`[data-product-id="${product.id}"]`);
+                if (row) {
+                    const quantityCell = row.querySelector('td:last-child');
+                    if (quantityCell.textContent !== `${product.quantity} KWh`) {
+                        quantityCell.textContent = `${product.quantity} KWh`;
+                    }
+                }
+            });
+        })
+        .catch(error => console.error(error))
+        .finally(() => {
+            // Call again after delay
+            setTimeout(pollProductionData, 5000);
+        });
+}
+
+
+function runIntervall(){
+    updateTemperature();
+    updateWind();
+    getTotalQuantity();
+}
+
+setInterval(runIntervall, 10000);
+
 document.addEventListener("DOMContentLoaded", function(){
     getProductionDay();
-    getTotalQuantity();
     productionConsumptionGraph();
+    updateTemperature();
+    updateWind();
+    getTotalQuantity();
+    pollProductionData();
 })
 

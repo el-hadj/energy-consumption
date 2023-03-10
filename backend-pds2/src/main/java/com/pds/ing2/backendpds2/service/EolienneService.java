@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -14,17 +16,29 @@ public class EolienneService {
 
     private final EolienneRepository eolienneRepository;
 
-    public double ProductionInstantanne(SourceProduction id) {
+    public Double ProductionInstantanne(SourceProduction id) {
         Eolienne eolienne = eolienneRepository.findByIdSource(id)
                 .orElseThrow(() -> new RuntimeException( "l'eolienne avec l'id " +id+ "n'existe pas"));
         double rayon = 10.0; // Rayon de l'éolienne en mètres
-        double surface = Math.PI * Math.pow(rayon, 2); // Surface balayée par les pales de l'éolienne
-        double vitesseVentEff = eolienne.getVitesseVent() * 0.7; // Vitesse effective du vent en tenant compte des pertes de rendement
-        double puissance = 0.5 * 1.225 * surface * Math.pow(vitesseVentEff, 3); // Calcul de la puissance produite
-        double puissanceMaximale = eolienne.getPuissanceMaximale(); //2 à 5 kWh
-        if (puissance > puissanceMaximale) {
-            puissance = puissanceMaximale; // La puissance produite est limitée par la puissance maximale de l'éolienne
+        Double puissance = 0.5 * rayon * eolienne.getVitesseVent()* eolienne.getPuissanceNominale();
+        return  puissance; // 2 à 5 kwh
+    }
+
+    public Double getVitesse(Integer id){
+        Eolienne eolienne = eolienneRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException( "l'eolienne avec l'id " +id+ "n'existe pas"));
+        Double vitesse = eolienne.getVitesseVent();
+        return vitesse;
+    }
+
+    public Eolienne updateEolienneVitesseVent(Integer eolienneId, double vitesseVent) {
+        Optional<Eolienne> optionalEolienne = eolienneRepository.findById(eolienneId);
+        if (optionalEolienne.isPresent()) {
+            Eolienne eolienne = optionalEolienne.get();
+            eolienne.setVitesseVent(vitesseVent);
+            return eolienneRepository.save(eolienne);
+        } else {
+            throw new RuntimeException( "l'eolienne avec l'id " +eolienneId+ "n'existe pas");
         }
-        return puissance;
     }
 }

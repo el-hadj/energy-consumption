@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -20,5 +22,23 @@ public class SolarService {
                 .orElseThrow(() -> new RuntimeException("le panneau solaire avec l'id " + id + " n'existe pas"));
         double energySolar = solar.getEnsoleillement() * solar.getPuissanceNominale(); //4 à 6 kWh
         return energySolar;
+    }
+
+    public Double getEnsolleillement(Integer id){
+       Solar solar = solarRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException( "le panneau solaire avec l'id " + id + " n'existe pas"));
+        Double temp = solar.getEnsoleillement();
+        return temp;
+    }
+
+    public Solar updateSolarEnsoleillement(Integer solarId, Double ensoleillement) {
+        Optional<Solar> optionalSolar = solarRepo.findById(solarId);
+        if (optionalSolar.isPresent()) {
+            Solar solar = optionalSolar.get();
+            solar.setEnsoleillement(ensoleillement);
+            return solarRepo.save(solar);
+        } else {
+            throw new RuntimeException("le panneau solaire avec l'id " + solarId + " n'existe pas");
+        }
     }
 }
