@@ -1,18 +1,15 @@
 package com.pds.ing2.backendpds2.service;
 
-import com.pds.ing2.backendpds2.model.ConsumptionBepos;
 import com.pds.ing2.backendpds2.model.EquipmentBepos;
 import com.pds.ing2.backendpds2.model.LightBepos;
-import com.pds.ing2.backendpds2.repository.ConsumptionBeposRepo;
 import com.pds.ing2.backendpds2.repository.LightBeposRepo;
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -20,18 +17,45 @@ import java.util.List;
 public class LightBeposService {
 
     private final LightBeposRepo lightBeposRepo;
+    //private LocalDateTime dateTime = LocalDateTime.now();
 
 
-    public Integer CalculatingEnergyConsumedLight(EquipmentBepos id) {
-        Integer energy = 0;
+    public Double CalculatingEnergyConsumedLight(EquipmentBepos id, LocalDateTime dateTime) {
+        Double energy = 0.0;
         LightBepos lightBepos = lightBeposRepo.findByIdEquip(id)
                 .orElseThrow(() -> new RuntimeException(" cette lampe avec l'id " + id + " n'existe pas "));
+        LocalTime localTime = dateTime.toLocalTime();
+        LocalTime h00 = LocalTime.of(1,0);
+        LocalTime h8 = LocalTime.of(8,0);
+        LocalTime h12 = LocalTime.of(12,0);
+        LocalTime h17 = LocalTime.of(17,0);
+        LocalTime h20 = LocalTime.of(20,0);
+        LocalTime h23 = LocalTime.of(23,0);
+
         if (lightBepos.getState()) {
-            energy += lightBepos.getIntensity() * 2;
-            return energy;
-        }else {
-            return 0;
+            if(localTime.isAfter(h00) && localTime.isBefore(h8)) {
+                energy += lightBepos.getIntensity() * 1.5;
+                //dateTime.plusHours(1);
+                return energy;
+            }else if(localTime.isAfter(h8) && localTime.isBefore(h12)){
+                energy += lightBepos.getIntensity() * 2;
+                //dateTime.plusHours(1);
+                return energy;
+            }else if(localTime.isAfter(h12) && localTime.isBefore(h17)){
+                energy += lightBepos.getIntensity() * 1.5;
+                //dateTime.plusHours(1);
+                return energy;
+            }else if(localTime.isAfter(h17) && localTime.isBefore(h20)){
+                energy += lightBepos.getIntensity() * 2;
+                //dateTime.plusHours(1);
+                return energy;
+            }else if(localTime.isAfter(h20) && localTime.isBefore(h23)){
+                energy += lightBepos.getIntensity() * 1.5;
+                //dateTime.plusHours(1);
+                return energy;
+            }
         }
+        return 0.0;
     }
 
     @Transactional

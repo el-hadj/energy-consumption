@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name="light_bepos")
 @Data
@@ -21,5 +23,6 @@ public class LightBepos {
     @JoinColumn(name = "id_equip", referencedColumnName = "id_equipment")
     @JsonBackReference
     private EquipmentBepos idEquip;
+    private LocalDateTime localDateTime;
 
 }

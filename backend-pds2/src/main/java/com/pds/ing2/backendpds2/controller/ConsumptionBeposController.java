@@ -3,9 +3,7 @@ package com.pds.ing2.backendpds2.controller;
 import com.pds.ing2.backendpds2.service.ConsumptionBeposService;
 import com.pds.ing2.backendpds2.service.ProductionBeposService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,7 +63,12 @@ public class ConsumptionBeposController {
     
 
     @GetMapping("/parjour")
-    public Map<String, Integer> consumptionDay(){
+    public Map<String, Double> consumptionDay(){
         return consumptionBeposService.getConsommationParJour();
+    }
+
+    @GetMapping("/latestTime")
+    public LocalDateTime latestTimeController(){
+        return consumptionBeposService.findLatestTimeService();
     }
 }

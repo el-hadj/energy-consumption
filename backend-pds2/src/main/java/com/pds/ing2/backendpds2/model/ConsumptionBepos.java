@@ -22,7 +22,7 @@ public class ConsumptionBepos {
             valueColumnName = "gen_value", initialValue = 1, allocationSize = 1)
     private Integer idConsBep;
     @Column(name = "energy_power")
-    private Integer energyPower;
+    private Double energyPower;
     @Column(name = "start_time")
     private LocalDateTime startTime;
     @OneToOne(cascade = CascadeType.MERGE)
@@ -30,7 +30,7 @@ public class ConsumptionBepos {
     @JsonBackReference
     private EquipmentBepos numEquipment;
 
-    public ConsumptionBepos(Integer energyPower, LocalDateTime startTime, EquipmentBepos numEquipment) {
+    public ConsumptionBepos(Double energyPower, LocalDateTime startTime, EquipmentBepos numEquipment) {
         this.energyPower = energyPower;
         this.startTime = startTime;
         this.numEquipment = numEquipment;
