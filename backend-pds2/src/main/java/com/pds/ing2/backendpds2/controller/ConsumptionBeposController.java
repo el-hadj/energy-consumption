@@ -67,6 +67,11 @@ public class ConsumptionBeposController {
         return consumptionBeposService.getConsommationParJour();
     }
 
+    @GetMapping("/parheure")
+    public Map<String, Double> consumptionByDay(){
+        return consumptionBeposService.getConsommationParHeure();
+    }
+
     @GetMapping("/latestTime")
     public LocalDateTime latestTimeController(){
         return consumptionBeposService.findLatestTimeService();

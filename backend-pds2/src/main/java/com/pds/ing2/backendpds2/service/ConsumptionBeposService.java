@@ -43,7 +43,7 @@ public class ConsumptionBeposService {
     private final TelevisonBeposService televisonBeposService;
 
 
-    @Scheduled(fixedRate = 5000)
+    //@Scheduled(fixedRate = 8000)
     public void addConsumption() {
         List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
         if (equipmentBepos != null) {
@@ -52,28 +52,28 @@ public class ConsumptionBeposService {
                 switch (typeEquipment) {
                     case "lampe":
                         //log.info("je calcule pour la lampe {}", e.getIdEquipment());
-                        Double lightEnergy = lightBeposService.CalculatingEnergyConsumedLight(e, dateTime);
+                        Double lightEnergy = lightBeposService.calculatingEnergyConsumedLight(e, dateTime);
                         ConsumptionBepos consumptionBepos = new ConsumptionBepos(lightEnergy, dateTime, e);
                         consumptionBeposRepo.save(consumptionBepos);
                         break;
-//                    case "cuisinière":
-//                        log.info("je calcule pour la cuisinière {}", e.getIdEquipment());
-//                        Integer cookerEnergy = cookerBeposService.CalculatingEnergyConsumedCooker(e);
-//                        ConsumptionBepos consumptionBepos1 = new ConsumptionBepos(cookerEnergy, dateTime, e);
-//                        consumptionBeposRepo.save(consumptionBepos1);
-//                        break;
-//                    case "chauffage":
-//                        log.info("je calcule pour le chauffage {}", e.getIdEquipment());
-//                        Integer heatingEnergy = heatingService.CalculatingEnergyConsumedHeating(e);
-//                        ConsumptionBepos consumptionBepos3 = new ConsumptionBepos(heatingEnergy, dateTime, e);
-//                        consumptionBeposRepo.save(consumptionBepos3);
-//                        break;
-//                    case "télévision":
-//                        log.info("je calcule pour la télé {}", e.getIdEquipment());
-//                        Integer tvEnergy = televisonBeposService.CalculatingEnergyConsumedTv(e);
-//                        ConsumptionBepos consumptionBepos4 = new ConsumptionBepos(tvEnergy, dateTime, e);
-//                        consumptionBeposRepo.save(consumptionBepos4);
-//                        break;
+                    case "cuisinière":
+                        //log.info("je calcule pour la cuisinière {}", e.getIdEquipment());
+                        Double cookerEnergy = cookerBeposService.calculatingEnergyConsumedCooker(e, dateTime);
+                        ConsumptionBepos consumptionBepos1 = new ConsumptionBepos(cookerEnergy, dateTime, e);
+                        consumptionBeposRepo.save(consumptionBepos1);
+                        break;
+                    case "chauffage":
+                        //log.info("je calcule pour le chauffage {}", e.getIdEquipment());
+                        Double heatingEnergy = heatingService.calculatingEnergyConsumedHeating(e, dateTime);
+                        ConsumptionBepos consumptionBepos3 = new ConsumptionBepos(heatingEnergy, dateTime, e);
+                        consumptionBeposRepo.save(consumptionBepos3);
+                        break;
+                    case "télévision":
+                       // log.info("je calcule pour la télé {}", e.getIdEquipment());
+                        Double tvEnergy = televisonBeposService.calculatingEnergyConsumedTv(e,dateTime);
+                        ConsumptionBepos consumptionBepos4 = new ConsumptionBepos(tvEnergy, dateTime, e);
+                        consumptionBeposRepo.save(consumptionBepos4);
+                        break;
                 }
 
             }
@@ -113,6 +113,54 @@ public class ConsumptionBeposService {
         }
         return consommationParJour;
     }
+
+
+    public Map<String, Double> getConsommationParHeure() {
+        Map<String, Double> consommationParHeure = new TreeMap<>(new Comparator<String>() {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+            public int compare(String date1, String date2) {
+                try {
+                    return dateFormat.parse(date1).compareTo(dateFormat.parse(date2));
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+        });
+
+        List<ConsumptionBepos> consommations = consumptionBeposRepo.findAll();
+        for (ConsumptionBepos consommation : consommations) {
+            LocalDateTime startTime = consommation.getStartTime();
+            String heure = startTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH"));
+
+            Double energyPower = consommation.getEnergyPower();
+            String heurePrecedente = null;
+            if (consommationParHeure.containsKey(heure)) {
+                heurePrecedente = heure;
+                energyPower += consommationParHeure.get(heure);
+            } else {
+                // Vérifie s'il y a des valeurs pour la même heure, mais des minutes différentes
+                for (Map.Entry<String, Double> entry : consommationParHeure.entrySet()) {
+                    String heureExistante = entry.getKey();
+                    if (heureExistante.startsWith(heure)) {
+                        heurePrecedente = heureExistante;
+                        energyPower += entry.getValue();
+                        break;
+                    }
+                }
+            }
+            // Si une heure précédente a été trouvée, ajoute l'énergie à cette heure et supprime l'heure originale
+            if (heurePrecedente != null) {
+                consommationParHeure.put(heurePrecedente, energyPower);
+                consommationParHeure.remove(heure);
+            } else {
+                consommationParHeure.put(heure, energyPower);
+            }
+        }
+        return consommationParHeure;
+    }
+
+
 
     public LocalDateTime findLatestTimeService(){
         return consumptionBeposRepo.findLatestTime();
