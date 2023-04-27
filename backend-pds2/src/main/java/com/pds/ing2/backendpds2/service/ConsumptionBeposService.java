@@ -117,7 +117,7 @@ public class ConsumptionBeposService {
 
     public Map<String, Double> getConsommationParHeure() {
         Map<String, Double> consommationParHeure = new TreeMap<>(new Comparator<String>() {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH");
 
             public int compare(String date1, String date2) {
                 try {
@@ -134,28 +134,11 @@ public class ConsumptionBeposService {
             String heure = startTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH"));
 
             Double energyPower = consommation.getEnergyPower();
-            String heurePrecedente = null;
             if (consommationParHeure.containsKey(heure)) {
-                heurePrecedente = heure;
+                //heurePrecedente = heure;
                 energyPower += consommationParHeure.get(heure);
-            } else {
-                // Vérifie s'il y a des valeurs pour la même heure, mais des minutes différentes
-                for (Map.Entry<String, Double> entry : consommationParHeure.entrySet()) {
-                    String heureExistante = entry.getKey();
-                    if (heureExistante.startsWith(heure)) {
-                        heurePrecedente = heureExistante;
-                        energyPower += entry.getValue();
-                        break;
-                    }
-                }
             }
-            // Si une heure précédente a été trouvée, ajoute l'énergie à cette heure et supprime l'heure originale
-            if (heurePrecedente != null) {
-                consommationParHeure.put(heurePrecedente, energyPower);
-                consommationParHeure.remove(heure);
-            } else {
-                consommationParHeure.put(heure, energyPower);
-            }
+            consommationParHeure.put(heure, energyPower);
         }
         return consommationParHeure;
     }
