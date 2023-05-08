@@ -1,5 +1,6 @@
 package com.pds.ing2.backendpds2.controller;
 
+import com.pds.ing2.backendpds2.dto.ConsumptionHourlyDTO;
 import com.pds.ing2.backendpds2.service.ConsumptionBeposService;
 import com.pds.ing2.backendpds2.service.ProductionBeposService;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +70,8 @@ public class ConsumptionBeposController {
     }
 
     @GetMapping("/parheure")
-    public Map<String, Double> consumptionByDay(){
-        return consumptionBeposService.getConsommationParHeure();
+    public List<ConsumptionHourlyDTO> consumptionByDay(@RequestParam("targetDate") LocalDate localDate){
+        return consumptionBeposService.getHourlyEnergyTotal(localDate);
     }
 
     @GetMapping("/latestTime")

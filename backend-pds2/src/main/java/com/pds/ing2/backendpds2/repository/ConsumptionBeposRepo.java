@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,10 @@ public interface ConsumptionBeposRepo extends JpaRepository<ConsumptionBepos, In
 
     @Query(nativeQuery = true)
     LocalDateTime findLatestTime ();
+
+    @Query(value = "SELECT DATE_TRUNC('hour', c.start_time) AS hour, SUM(c.energy_power) AS total_energy "
+            + "FROM consumption_bepos c WHERE DATE(c.start_time) = :targetDate GROUP BY hour ORDER BY hour", nativeQuery = true)
+    List<Object[]> findConsumptionByDay (@Param("targetDate") LocalDate targetDate);
 
 
 

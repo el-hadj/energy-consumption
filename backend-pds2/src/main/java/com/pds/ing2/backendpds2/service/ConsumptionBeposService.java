@@ -1,5 +1,6 @@
 package com.pds.ing2.backendpds2.service;
 
+import com.pds.ing2.backendpds2.dto.ConsumptionHourlyDTO;
 import com.pds.ing2.backendpds2.model.ConsumptionBepos;
 import com.pds.ing2.backendpds2.model.EquipmentBepos;
 import com.pds.ing2.backendpds2.repository.ConsumptionBeposRepo;
@@ -11,15 +12,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +43,9 @@ public class ConsumptionBeposService {
     private final TelevisonBeposService televisonBeposService;
 
 
-    //@Scheduled(fixedRate = 8000)
+    @Scheduled(fixedRate = 8000)
     public void addConsumption() {
+        log.info("je calcule la consommation ");
         List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
         if (equipmentBepos != null) {
             for (EquipmentBepos e : equipmentBepos) {
@@ -82,6 +83,7 @@ public class ConsumptionBeposService {
         } else {
             log.info("il n'y a pas d'équipement");
         }
+        log.info("je termine le calcul de la consommation " + dateTime);
     }
 
     public List<Map<String, String>> getListEquipment(Integer id) {
@@ -114,33 +116,15 @@ public class ConsumptionBeposService {
         return consommationParJour;
     }
 
-
-    public Map<String, Double> getConsommationParHeure() {
-        Map<String, Double> consommationParHeure = new TreeMap<>(new Comparator<String>() {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH");
-
-            public int compare(String date1, String date2) {
-                try {
-                    return dateFormat.parse(date1).compareTo(dateFormat.parse(date2));
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException(e);
-                }
-            }
-        });
-
-        List<ConsumptionBepos> consommations = consumptionBeposRepo.findAll();
-        for (ConsumptionBepos consommation : consommations) {
-            LocalDateTime startTime = consommation.getStartTime();
-            String heure = startTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH"));
-
-            Double energyPower = consommation.getEnergyPower();
-            if (consommationParHeure.containsKey(heure)) {
-                //heurePrecedente = heure;
-                energyPower += consommationParHeure.get(heure);
-            }
-            consommationParHeure.put(heure, energyPower);
+    public List<ConsumptionHourlyDTO> getHourlyEnergyTotal(LocalDate targetDate) {
+        List<Object[]> result = consumptionBeposRepo.findConsumptionByDay(targetDate);
+        List<ConsumptionHourlyDTO> dtoList = new ArrayList<>();
+        for (Object[] obj : result) {
+            LocalDateTime hour = ((Timestamp) obj[0]).toLocalDateTime();
+            double totalEnergy = ((Number) obj[1]).doubleValue();
+            dtoList.add(new ConsumptionHourlyDTO(hour, totalEnergy));
         }
-        return consommationParHeure;
+        return dtoList;
     }
 
 
