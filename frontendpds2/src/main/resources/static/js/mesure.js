@@ -7,7 +7,7 @@ function calculateConsoPiece(idRoom) {
         var list = [];
         bod.innerHTML = '';
         for (var i = 0; i < listVal.length; i++) {
-            list[i] = parseFloat(listVal[i].innerHTML );
+            list[i] = parseFloat(listVal[i].innerHTML);
             energyTotal = energyTotal + parseFloat(list[i]);
 
         }
@@ -47,7 +47,7 @@ function getEquipement(idRoom) {
     fetch('http://localhost:9000/consommation?idRoom=' + idRoom)
         .then(response => response.json())
         .then(data => {
-            const equipmentData = document.getElementById('equipment-data'+idRoom);
+            const equipmentData = document.getElementById('equipment-data' + idRoom);
             equipmentData.innerHTML = '';
             data.forEach(equipment => {
 
@@ -69,14 +69,14 @@ function getEquipement(idRoom) {
 
                 var buttonOn = document.createElement("button");
                 buttonOn.setAttribute("class", "On btn btn-sm btn-outline-primary active");
-                buttonOn.setAttribute("id",'buttonOn'+equipment.id_equipment);
+                buttonOn.setAttribute("id", 'buttonOn' + equipment.id_equipment);
                 buttonOn.setAttribute("name", equipment.nom_equipment);
                 buttonOn.setAttribute("onclick", "OnAndOffEquipment(this.id, this.name)");
                 buttonOn.textContent = "On";
 
                 var buttonOff = document.createElement("button");
                 buttonOff.setAttribute("class", "Off btn btn-sm btn-outline-primary");
-                buttonOff.setAttribute("id",'buttonOff'+equipment.id_equipment);
+                buttonOff.setAttribute("id", 'buttonOff' + equipment.id_equipment);
                 buttonOff.setAttribute("name", equipment.nom_equipment);
                 buttonOff.setAttribute("onclick", "OnAndOffEquipment(this.id, this.name)");
                 buttonOff.textContent = "Off";
@@ -89,8 +89,8 @@ function getEquipement(idRoom) {
                 const powerCell = document.createElement('td');
                 var span = document.createElement("span");
                 span.setAttribute("style", "width: 100px; text-align: right");
-                span.setAttribute("class", "p cons"+idRoom);
-                span.setAttribute("id",'power'+equipment.id_equipment);
+                span.setAttribute("class", "p cons" + idRoom);
+                span.setAttribute("id", 'power' + equipment.id_equipment);
                 span.textContent = equipment.energy_power;
 
                 var span1 = document.createElement("span");
@@ -113,13 +113,13 @@ function getEquipement(idRoom) {
 
 }
 
-function OnAndOffEquipment(id, name){
+function OnAndOffEquipment(id, name) {
     let state = true;
     let nameLower = name.toLowerCase();
     let buttonOn = document.querySelectorAll('.On')
     let buttonOff = document.querySelectorAll('.Off')
     for (let i = 0; i < buttonOn.length; i++) {
-        if(nameLower === "chauffage"){
+        if (nameLower === "chauffage") {
             let idE = buttonOn[i].id.split("On")[1];
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -127,7 +127,7 @@ function OnAndOffEquipment(id, name){
                 buttonOff[i].classList.remove("active");
                 buttonOn[i].disabled = true; // Disable the On button
                 buttonOff[i].disabled = false; // Enable the Off button
-                updateStatus(idE,"heating", state);
+                updateStatus(idE, "heating", state);
             });
             buttonOff[i].addEventListener("click", () => {
                 state = false;
@@ -135,9 +135,9 @@ function OnAndOffEquipment(id, name){
                 buttonOn[i].classList.remove("active");
                 buttonOff[i].disabled = true; // Disable the Off button
                 buttonOn[i].disabled = false;
-                updateStatus(idE,"heating", state)
+                updateStatus(idE, "heating", state)
             });
-        }else if(nameLower === "lampe"){
+        } else if (nameLower === "lampe") {
             let id = buttonOn[i].id.split("On")[1]
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -145,7 +145,7 @@ function OnAndOffEquipment(id, name){
                 buttonOff[i].classList.remove("active");
                 buttonOn[i].disabled = true; // Disable the On button
                 buttonOff[i].disabled = false; // Enable the Off button
-                updateStatus(id,"light", state)
+                updateStatus(id, "light", state)
             });
             buttonOff[i].addEventListener("click", () => {
                 state = false;
@@ -153,9 +153,9 @@ function OnAndOffEquipment(id, name){
                 buttonOn[i].classList.remove("active");
                 buttonOff[i].disabled = true; // Disable the Off button
                 buttonOn[i].disabled = false;
-                updateStatus(id,"light", state)
+                updateStatus(id, "light", state)
             });
-        }else if(nameLower === "cuisinière"){
+        } else if (nameLower === "cuisinière") {
             let id = buttonOn[i].id.split("On")[1]
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -163,7 +163,7 @@ function OnAndOffEquipment(id, name){
                 buttonOff[i].classList.remove("active");
                 buttonOn[i].disabled = true; // Disable the On button
                 buttonOff[i].disabled = false; // Enable the Off button
-                updateStatus(id,"cooker", state)
+                updateStatus(id, "cooker", state)
             });
             buttonOff[i].addEventListener("click", () => {
                 state = false;
@@ -171,9 +171,9 @@ function OnAndOffEquipment(id, name){
                 buttonOn[i].classList.remove("active");
                 buttonOff[i].disabled = true; // Disable the Off button
                 buttonOn[i].disabled = false;
-                updateStatus(id,"cooker", state)
+                updateStatus(id, "cooker", state)
             });
-        }else if(nameLower === "télévision"){
+        } else if (nameLower === "télévision") {
             let id = buttonOn[i].id.split("On")[1]
             buttonOn[i].addEventListener("click", () => {
                 state = true;
@@ -181,7 +181,7 @@ function OnAndOffEquipment(id, name){
                 buttonOff[i].classList.remove("active");
                 buttonOn[i].disabled = true; // Disable the On button
                 buttonOff[i].disabled = false; // Enable the Off button
-                updateStatus(id,"tv", state)
+                updateStatus(id, "tv", state)
             });
             buttonOff[i].addEventListener("click", () => {
                 state = false;
@@ -189,33 +189,35 @@ function OnAndOffEquipment(id, name){
                 buttonOn[i].classList.remove("active");
                 buttonOff[i].disabled = true; // Disable the Off button
                 buttonOn[i].disabled = false;
-                updateStatus(id,"tv", state)
+                updateStatus(id, "tv", state)
             });
         }
 
     }
 }
 
-function updateStatus(id, equipment, state){
+function updateStatus(id, equipment, state) {
     const requestOptions = {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(state)
     };
-    const url = 'http://localhost:9000/'+equipment+'/'+id+'/state';
-    console.log("je suis "+ url);
+    const url = 'http://localhost:9000/' + equipment + '/' + id + '/state';
+    console.log("je suis " + url);
     fetch(url, requestOptions)
         .then(() => console.log("j'ai update l'etat :" + state));
 }
 
 
-function refreshPower(idRoom){
+function refreshPower(idRoom) {
     fetch('http://localhost:9000/consommation?idRoom=' + idRoom)
         .then(response => response.json())
         .then(data => {
             data.forEach(equipment => {
                 const powerCell = document.getElementById(`power${equipment.id_equipment}`);
-                powerCell.textContent = equipment.energy_power;
+                if (powerCell) {
+                    powerCell.textContent = equipment.energy_power;
+                }
             });
         });
 }
@@ -226,7 +228,6 @@ function test() {
     var idcons = document.querySelectorAll(".pieces");
     for (var i = 0; i < idcons.length; i++) {
         var id = (idcons[i].attributes.id.value).split('s')[1]
-        console.log("refresh"+id);
         refreshPower(id);
     }
     var idPiece = document.querySelectorAll(".sum");
@@ -234,10 +235,11 @@ function test() {
         calculateConsoPiece((idPiece[j].attributes.id.value).split('m')[1]);
     }
     calculConsoTotal()
+    latestTime()
 }
 
 
-function getConsommationParJour(){
+function getConsommationParJour() {
     fetch('http://localhost:9000/consommation/parjour')
         .then(response => response.json())
         .then(data => {
@@ -245,7 +247,7 @@ function getConsommationParJour(){
             const values = Object.values(data);
             const ctx = document.getElementById('lineChart').getContext('2d');
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
@@ -298,6 +300,7 @@ function filterData() {
             const labels = Object.keys(filteredData);
             const values = Object.values(filteredData);
 
+
             // Mettre à jour le graphique avec les données filtrées
             const chart = Chart.getChart('lineChart');
             chart.data.labels = labels;
@@ -306,8 +309,76 @@ function filterData() {
         });
 }
 
-document.addEventListener("DOMContentLoaded", function(){
+
+function latestTime() {
+    fetch('http://localhost:9000/production/latestDate')
+        .then(response => response.json())
+        .then(data => {
+            const date = document.getElementById("date");
+            const hour = document.getElementById("hour");
+            let dateString = data.split("T")[0];
+            let hourString = (data.split("T")[1]).slice(0, 5);
+            date.textContent = dateString;
+            hour.textContent = hourString;
+
+        });
+}
+
+function formatTime(dateString) {
+    const date = new Date(dateString);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+}
+
+
+function filterDataHour() {
+    let startDateHour = document.getElementById("start-date-hour").value;
+    if (!startDateHour) {
+        startDateHour = new Date().toISOString().substr(0, 10);
+    }
+    fetch(`http://localhost:9000/consommation/parheure?targetDate=${startDateHour}`)
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(d => formatTime(d.hour));
+            const values = data.map(d => d.totalEnergy);
+            const ctx = document.getElementById("barchartHour").getContext("2d");
+            const oldChart = Chart.getChart(ctx);
+            if (oldChart) {
+                oldChart.destroy();
+            }
+            const myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Evolution de la consommation journalière",
+                        data: values,
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Consommation Energétique (Wh)'
+                            }
+                        }
+                    }
+                }
+
+            });
+        })
+        .catch(error => console.log(error));
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
     getConsommationParJour();
+    filterDataHour();
 })
 
 

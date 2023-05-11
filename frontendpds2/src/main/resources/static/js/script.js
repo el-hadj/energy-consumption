@@ -1,17 +1,15 @@
 function getTotalQuantity() {
-    let body = document.getElementById("prodTotal");
-    body.innerHTML = '';
-    const quantityCells = document.querySelectorAll("#myTable td:nth-child(2)");
-    let total = 0;
-    quantityCells.forEach(function(cell) {
-        total += parseFloat(cell.textContent);
-    });
-    total = parseFloat(total.toPrecision((3)));
-    if (isNaN(total)) {
-        body.innerHTML += 0;
-    } else {
-        body.innerHTML += total;
-    }
+    fetch('http://localhost:9000/production/prod')
+        .then(response => response.json())
+        .then(data => {
+            let total = 0;
+            for (let i = 0; i < data.length; i++) {
+                total += data[i].quantity;
+            }
+            total = (total / 1000).toFixed(3);
+            document.getElementById("prodTotal").innerHTML = `${total}`;
+        })
+        .catch(error => console.error(error));
 }
 
 function updateTemperature() {
@@ -58,7 +56,7 @@ function getProductionDay(){
                         y: {
                             title: {
                                 display: true,
-                                text: 'Production (KWh)'
+                                text: 'Production (Wh)'
                             }
                         }
                     }
@@ -69,12 +67,14 @@ function getProductionDay(){
 
 function filterDataProd() {
     // Obtenez les dates sélectionnées par l'utilisateur
-    const startDate = document.getElementById('start-date-prod').value;
-    const endDate = document.getElementById('end-date-prod').value;
+    const startDateInput = document.getElementById('start-date-prod');
+    const endDateInput = document.getElementById('end-date-prod');
+    const startDate = new Date(startDateInput.value);
+    const endDate = new Date(endDateInput.value);
 
-    // Convertissez les dates en objets Date
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    // Convertissez les dates en dates UTC
+    const start = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()));
+    const end = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate()));
 
     // Obtenez les données de consommation
     fetch('http://localhost:9000/production/parjour')
@@ -84,7 +84,7 @@ function filterDataProd() {
             const filteredData = Object.entries(data)
                 .filter(([dateStr, value]) => {
                     const [day, month, year] = dateStr.split('/'); // Extraction des parties de date
-                    const date = new Date(year, month - 1, day); // Création d'un objet Date à partir des parties de date
+                    const date = new Date(Date.UTC(year, month - 1, day)); // Création d'un objet Date UTC à partir des parties de date
                     return date >= start && date <= end;
                 })
                 .reduce((acc, [dateStr, value]) => {
@@ -140,7 +140,7 @@ function productionConsumptionGraph(){
                                 y: {
                                     title: {
                                         display: true,
-                                        text: 'Production (KWh)'
+                                        text: 'Production-Consommation(Wh)'
                                     }
                                 }
                             }
@@ -150,20 +150,69 @@ function productionConsumptionGraph(){
         })
 }
 
+function filterDataProdCons() {
+    // Obtenez les dates sélectionnées par l'utilisateur
+    const startDate = new Date(document.getElementById('start-date-prod-cons').value);
+    const endDate = new Date(document.getElementById('end-date-prod-cons').value);
+
+    const startCons = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()));
+    const endCons = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate()));
+
+    // Obtenez les données de production et de consommation
+    fetch('http://localhost:9000/production/parjour')
+        .then(response => response.json())
+        .then(data1 => {
+            fetch('http://localhost:9000/consommation/parjour')
+                .then(response => response.json())
+                .then(data2 => {
+                    // Filtrer les données en fonction de la plage de dates sélectionnée
+                    const filteredData1 = Object.entries(data1)
+                        .filter(([dateStr, value]) => {
+                            const [day, month, year] = dateStr.split('/'); // Extraction des parties de date
+                            const date = new Date(Date.UTC(year, month - 1, day)); // Création d'un objet Date à partir des parties de date
+                            return date >= startCons && date <= endCons;
+                        })
+                        .reduce((acc, [dateStr, value]) => {
+                            acc[dateStr] = value;
+                            return acc;
+                        }, {});
+                    const filteredData2 = Object.entries(data2)
+                        .filter(([dateStr, value]) => {
+                            const [day, month, year] = dateStr.split('/'); // Extraction des parties de date
+                            const date = new Date(Date.UTC(year, month - 1, day)); // Création d'un objet Date à partir des parties de date
+                            return date >= startCons && date <= endCons;
+                        })
+                        .reduce((acc, [dateStr, value]) => {
+                            acc[dateStr] = value;
+                            return acc;
+                        }, {});
+
+                    // Obtenir les étiquettes et les valeurs filtrées
+                    const labels = Object.keys(filteredData1);
+                    const data1Values = Object.values(filteredData1);
+                    const data2Values = Object.values(filteredData2);
+
+                    // Mettre à jour le graphique avec les données filtrées
+                    const chart = Chart.getChart('lineChart1');
+                    chart.data.labels = labels;
+                    chart.data.datasets[0].data = data1Values;
+                    chart.data.datasets[1].data = data2Values;
+                    chart.update();
+                });
+        });
+}
+
 function pollProductionData() {
-    fetch('/production/data')
+    fetch('http://localhost:9000/production/prod')
         .then(response => response.json())
         .then(data => {
-            const tableBody = document.querySelector('#myTable tbody');
-            data.forEach(product => {
-                const row = tableBody.querySelector(`[data-product-id="${product.id}"]`);
-                if (row) {
-                    const quantityCell = row.querySelector('td:last-child');
-                    if (quantityCell.textContent !== `${product.quantity} KWh`) {
-                        quantityCell.textContent = `${product.quantity} KWh`;
-                    }
-                }
-            });
+            // récupérer le tableau et mettre à jour les valeurs
+            let table = document.getElementById("myTable");
+            let rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+            for (let i = 0; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName("td");
+                cells[1].innerText = data[i].quantity;
+            }
         })
         .catch(error => console.error(error))
         .finally(() => {
@@ -177,6 +226,19 @@ function runIntervall(){
     updateTemperature();
     updateWind();
     getTotalQuantity();
+    pollProductionData();
+    latestDate();
+}
+
+function latestDate() {
+    fetch('http://localhost:9000/production/latestDate')
+        .then(response => response.json())
+        .then(data => {
+            const date = document.getElementById("date");
+            let dateString = data;
+            date.textContent = dateString;
+
+        });
 }
 
 setInterval(runIntervall, 10000);
@@ -187,6 +249,6 @@ document.addEventListener("DOMContentLoaded", function(){
     updateTemperature();
     updateWind();
     getTotalQuantity();
-    pollProductionData();
+    latestDate();
 })
 

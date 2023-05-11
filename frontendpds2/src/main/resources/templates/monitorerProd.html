@@ -22,7 +22,10 @@
             <h2 class="m-2 p-1 border-top-0 rounded">Bienvenue dans votre espace de Production </h2>
         </div>
         <div class="col-4 card card-header m-3" style="background-color:#f0f8ff">
-            <span><H4> Production totale</H4></span>
+            <span>
+                <H4> Production totale</H4>
+                 <H5 style="text-align: right" id="date" onload="latestDate()"></H5>
+            </span>
             <span id="prodTotal" style="font-size: 4em"></span>
             <span>KWh</span>
         </div>
@@ -56,17 +59,13 @@
             <thead>
             <tr>
                 <th>Source de Production</th>
-                <!--th>Date de production</th>
-                <th>ID source</th-->
-                <th>Quantité</th>
+                <th>Quantité (WH)</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="product : ${production}">
                 <td th:text="${product.name_prod}"></td>
-                <td th:text="${product.quantity + ' KWh'}"></td>
-                <!--td th:text="${product.date_prod}"></td>
-                <td th:text="${product.id_source}"></td-->
+                <td th:text="${product.quantity}"></td>
             </tr>
             </tbody>
         </table>
@@ -95,6 +94,8 @@
             <div class="card-header">Production et Consommation globale</div>
             <div class="card-body">
                 <canvas id="lineChart1" style="max-height: 500px"></canvas>
+                <input onchange="filterDataProdCons()" type="date" id="start-date-prod-cons">
+                <input onchange="filterDataProdCons()" type="date" id="end-date-prod-cons">
             </div>
         </div>
     </div>
