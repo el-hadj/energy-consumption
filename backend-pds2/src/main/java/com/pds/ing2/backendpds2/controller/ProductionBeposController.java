@@ -6,6 +6,7 @@ import com.pds.ing2.backendpds2.service.ProductionBeposService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class ProductionBeposController {
     }
 
     @GetMapping("/latestDate")
-    public LocalDateTime latestTimeController(){
+    public LocalDate latestTimeController(){
         return productionBeposService.getLatestTime();
     }
 

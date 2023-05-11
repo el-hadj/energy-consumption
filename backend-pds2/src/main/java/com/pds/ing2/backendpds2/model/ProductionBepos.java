@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -19,12 +20,12 @@ public class ProductionBepos {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer  idProd;
     private String nameProd;
-    private LocalDateTime dateProd;
+    private LocalDate dateProd;
     private Double quantity;
     private Integer  idSource;
 
 
-    public ProductionBepos(String nameProd, LocalDateTime dateProd, Double quantity, Integer idSource) {
+    public ProductionBepos(String nameProd, LocalDate dateProd, Double quantity, Integer idSource) {
         this.nameProd = nameProd;
         this.dateProd = dateProd;
         this.quantity = quantity;
