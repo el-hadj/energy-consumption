@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -20,7 +21,14 @@ public class SolarService {
     public double productionSolar(SourceProduction id) {
         Solar solar = solarRepo.findByIdSource(id)
                 .orElseThrow(() -> new RuntimeException("le panneau solaire avec l'id " + id + " n'existe pas"));
-        double energySolar = solar.getEnsoleillement() * solar.getPuissanceNominale(); //4 à 6 kWh
+        Random rand = new Random();
+        double temperatureMin = 25.0; // Température minimale en degrés Celsius
+        double temperatureMax = 35.0; // Température maximale en degrés Celsius
+        double temperature = rand.nextDouble() * (temperatureMax - temperatureMin) + temperatureMin;
+        temperature = Math.round(temperature * 10) / 10.0; // Arrondir à une décimale
+        updateSolarEnsoleillement(solar.getId(), temperature);
+        double energySolar = temperature * solar.getPuissanceNominale(); //4 à 6 kWh
+        energySolar = Math.round(energySolar * 100.0) / 100.0;
         return energySolar;
     }
 

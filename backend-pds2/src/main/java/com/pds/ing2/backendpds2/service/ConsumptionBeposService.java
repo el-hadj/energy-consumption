@@ -28,10 +28,10 @@ import java.util.*;
 @Data
 public class ConsumptionBeposService {
 
-
     private LocalDateTime dateTime = LocalDateTime.now();
 
     private final EquipementBeposRepo equipementBeposRepo;
+    public Boolean startSchedule = true;
 
     private final ConsumptionBeposRepo consumptionBeposRepo;
 
@@ -45,45 +45,50 @@ public class ConsumptionBeposService {
 
     @Scheduled(fixedRate = 8000)
     public void addConsumption() {
-        log.info("je calcule la consommation ");
-        List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
-        if (equipmentBepos != null) {
-            for (EquipmentBepos e : equipmentBepos) {
-                String typeEquipment = e.getNomEquipment().toLowerCase();
-                switch (typeEquipment) {
-                    case "lampe":
-                        //log.info("je calcule pour la lampe {}", e.getIdEquipment());
-                        Double lightEnergy = lightBeposService.calculatingEnergyConsumedLight(e, dateTime);
-                        ConsumptionBepos consumptionBepos = new ConsumptionBepos(lightEnergy, dateTime, e);
-                        consumptionBeposRepo.save(consumptionBepos);
-                        break;
-                    case "cuisinière":
-                        //log.info("je calcule pour la cuisinière {}", e.getIdEquipment());
-                        Double cookerEnergy = cookerBeposService.calculatingEnergyConsumedCooker(e, dateTime);
-                        ConsumptionBepos consumptionBepos1 = new ConsumptionBepos(cookerEnergy, dateTime, e);
-                        consumptionBeposRepo.save(consumptionBepos1);
-                        break;
-                    case "chauffage":
-                        //log.info("je calcule pour le chauffage {}", e.getIdEquipment());
-                        Double heatingEnergy = heatingService.calculatingEnergyConsumedHeating(e, dateTime);
-                        ConsumptionBepos consumptionBepos3 = new ConsumptionBepos(heatingEnergy, dateTime, e);
-                        consumptionBeposRepo.save(consumptionBepos3);
-                        break;
-                    case "télévision":
-                       // log.info("je calcule pour la télé {}", e.getIdEquipment());
-                        Double tvEnergy = televisonBeposService.calculatingEnergyConsumedTv(e,dateTime);
-                        ConsumptionBepos consumptionBepos4 = new ConsumptionBepos(tvEnergy, dateTime, e);
-                        consumptionBeposRepo.save(consumptionBepos4);
-                        break;
-                }
+        if(startSchedule){
+            log.info("je calcule la consommation à : " +dateTime);
+            List<EquipmentBepos> equipmentBepos = equipementBeposRepo.findAll();
+            if (equipmentBepos != null && startSchedule) {
+                for (EquipmentBepos e : equipmentBepos) {
+                    String typeEquipment = e.getNomEquipment().toLowerCase();
+                    switch (typeEquipment) {
+                        case "lampe":
+                            //log.info("je calcule pour la lampe {}", e.getIdEquipment());
+                            Double lightEnergy = lightBeposService.calculatingEnergyConsumedLight(e, dateTime);
+                            ConsumptionBepos consumptionBepos = new ConsumptionBepos(lightEnergy, dateTime, e);
+                            consumptionBeposRepo.save(consumptionBepos);
+                            break;
+                        case "cuisinière":
+                            //log.info("je calcule pour la cuisinière {}", e.getIdEquipment());
+                            Double cookerEnergy = cookerBeposService.calculatingEnergyConsumedCooker(e, dateTime);
+                            ConsumptionBepos consumptionBepos1 = new ConsumptionBepos(cookerEnergy, dateTime, e);
+                            consumptionBeposRepo.save(consumptionBepos1);
+                            break;
+                        case "chauffage":
+                            //log.info("je calcule pour le chauffage {}", e.getIdEquipment());
+                            Double heatingEnergy = heatingService.calculatingEnergyConsumedHeating(e, dateTime);
+                            ConsumptionBepos consumptionBepos3 = new ConsumptionBepos(heatingEnergy, dateTime, e);
+                            consumptionBeposRepo.save(consumptionBepos3);
+                            break;
+                        case "télévision":
+                            // log.info("je calcule pour la télé {}", e.getIdEquipment());
+                            Double tvEnergy = televisonBeposService.calculatingEnergyConsumedTv(e,dateTime);
+                            ConsumptionBepos consumptionBepos4 = new ConsumptionBepos(tvEnergy, dateTime, e);
+                            consumptionBeposRepo.save(consumptionBepos4);
+                            break;
+                    }
 
+                }
+                LocalDateTime newdate = dateTime.plusHours(1);
+                setDateTime(newdate);
+            } else {
+                log.info("il n'y a pas d'équipement");
             }
-            LocalDateTime newdate = dateTime.plusHours(1);
-            setDateTime(newdate);
-        } else {
-            log.info("il n'y a pas d'équipement");
+            log.info("je termine le calcul de la consommation ");
+        }else {
+            log.info("j'arrète mon schedule");
         }
-        log.info("je termine le calcul de la consommation " + dateTime);
+
     }
 
     public List<Map<String, String>> getListEquipment(Integer id) {

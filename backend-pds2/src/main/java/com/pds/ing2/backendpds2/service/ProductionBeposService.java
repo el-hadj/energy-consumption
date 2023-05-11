@@ -10,12 +10,15 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
@@ -31,7 +34,8 @@ public class ProductionBeposService {
 
     private final EolienneService eolienneService;
 
-    private LocalDateTime dateTime = LocalDateTime.now();
+    LocalDate currentDate = LocalDate.now();
+    LocalDateTime currentLocalDateTime = LocalDateTime.of(currentDate, LocalTime.MIDNIGHT);
 
     private final SourceProductionRepo sourceProductionRepo;
 
@@ -39,37 +43,45 @@ public class ProductionBeposService {
 
     private final SolarService solarService;
 
+    public Boolean startScheduleProd = false;
+
     public List<Map<String, String>> getProd(){
         return productionBeposRepo.getAllProduction();
     }
 
-    //@Scheduled(fixedRate = 4000)
+    @Scheduled(fixedRate = 15000)
     public void getProduction() {
-        List<SourceProduction> source = sourceProductionRepo.findAll();
-        if (source != null) {
-            for (SourceProduction s : source) {
-                String typeEquipment = s.getName().toLowerCase();
-                switch (typeEquipment) {
-                    case "eolienne":
-                        log.info("je calcule pour l'eolienne {}", s.getId());
-                        Double eolienneEnergy = eolienneService.ProductionInstantanne(s);
-                        ProductionBepos productionBepos = new ProductionBepos(s.getName(), dateTime, eolienneEnergy, s.getId());
-                        productionBeposRepo.save(productionBepos);
-                        break;
-                    case "solaire":
-                        log.info("je calcule pour le solaire {}", s.getId());
-                        Double solaireEnergy = solarService.productionSolar(s);
-                        ProductionBepos solaire = new ProductionBepos(s.getName(), dateTime, solaireEnergy, s.getId());
-                        productionBeposRepo.save(solaire);
-                        break;
-                }
+        if(startScheduleProd){
+            log.info("je calcule la production à : "+currentLocalDateTime);
+            List<SourceProduction> source = sourceProductionRepo.findAll();
+            if (source != null) {
+                for (SourceProduction s : source) {
+                    String typeEquipment = s.getName().toLowerCase();
+                    switch (typeEquipment) {
+                        case "eolienne":
+                            log.info("je calcule pour l'eolienne {}", s.getId());
+                            Double eolienneEnergy = eolienneService.ProductionInstantanne(s);
+                            ProductionBepos productionBepos = new ProductionBepos(s.getName(), currentLocalDateTime, eolienneEnergy, s.getId());
+                            productionBeposRepo.save(productionBepos);
+                            break;
+                        case "solaire":
+                            log.info("je calcule pour le solaire {}", s.getId());
+                            Double solaireEnergy = solarService.productionSolar(s);
+                            ProductionBepos solaire = new ProductionBepos(s.getName(), currentLocalDateTime, solaireEnergy, s.getId());
+                            productionBeposRepo.save(solaire);
+                            break;
+                    }
 
+                }
+                LocalDateTime newdate = currentLocalDateTime.plusDays(1);
+                setCurrentLocalDateTime(newdate);
+            }else {
+                log.info("il n'y a pas de production");
             }
-            LocalDateTime newdate = dateTime.plusDays(1);
-            setDateTime(newdate);
         }else {
-            log.info("il n'y a pas de production");
+            log.info("j'arrète la production ");
         }
+
     }
 
     public Map<String, Double> getProductionDay() {
@@ -112,5 +124,9 @@ public class ProductionBeposService {
 
     public Eolienne updateVitess(Integer id, Double vitesse){
         return eolienneService.updateEolienneVitesseVent(id, vitesse);
+    }
+
+    public LocalDateTime getLatestTime(){
+        return productionBeposRepo.getDateTime();
     }
 }

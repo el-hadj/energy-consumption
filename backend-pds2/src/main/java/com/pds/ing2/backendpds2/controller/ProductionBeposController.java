@@ -6,6 +6,7 @@ import com.pds.ing2.backendpds2.service.ProductionBeposService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,18 @@ public class ProductionBeposController {
         return productionBeposService.ensoleil(id);
     }
 
+    @GetMapping("/startScheduledProd")
+    public void startScheduledMethod() {
+        productionBeposService.startScheduleProd = true;
+    }
+
+
+
+    @GetMapping("/stopScheduledProd")
+    public void stopScheduledMethod() {
+        productionBeposService.startScheduleProd = false;
+    }
+
     @PutMapping("/{id}/upEnso")
     public Solar updateSolarEnsoleillement(@PathVariable(value = "id") Integer solarId,
                                            @RequestParam(value = "enso") Double ensoleillement) {
@@ -49,6 +62,11 @@ public class ProductionBeposController {
     public Eolienne updateEolienne(@PathVariable(value = "id") Integer eolId,
                                    @RequestParam(value = "vit") Double vitesse) {
         return productionBeposService.updateVitess(eolId, vitesse);
+    }
+
+    @GetMapping("/latestDate")
+    public LocalDateTime latestTimeController(){
+        return productionBeposService.getLatestTime();
     }
 
 
