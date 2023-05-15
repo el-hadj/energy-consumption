@@ -127,7 +127,7 @@
 </div>
 
 <!--ici sera l'activité d'une pieces -->
-<div class="row">
+<!--<div class="row">
     <div class="col-12">
         <div class="m-3 shadow-sm px-4 py-3 card card-header" style="background-color:#f0f8ff ">
             <h2 class="m-2 p-1 border-top-0 rounded">Graphe de la consommation globale</h2>
@@ -142,7 +142,36 @@
         <canvas id="barchartHour" style="max-height: 500px"></canvas>
         <input onchange="filterDataHour()" type="date" id="start-date-hour">
     </div>
+</div>-->
+
+<div class="row">
+    <div class="m-3 shadow-sm px-4 py-3 w-50 card card-header" style="background-color:#f0f8ff ">
+        <h2 class="m-2 p-1 border-top-0 rounded">Graphe de la consommation globale</h2>
+    </div>
 </div>
+
+<div class="row d-flex justify-content-center m-1">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Consommation globale</div>
+            <div class="card-body">
+                <canvas id="lineChart" style="max-height: 500px"></canvas>
+                <input onchange="filterData()" type="date" id="start-date" >
+                <input onchange="filterData()" type="date" id="end-date">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Consommation journalière</div>
+            <div class="card-body">
+                <canvas id="barchartHour" style="max-height: 500px"></canvas>
+                <input onchange="filterDataHour()" type="date" id="start-date-hour">
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
 
 
 
