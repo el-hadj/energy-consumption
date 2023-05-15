@@ -311,7 +311,7 @@ function filterData() {
 
 
 function latestTime() {
-    fetch('http://localhost:9000/production/latestDate')
+    fetch('http://localhost:9000/consommation/latestTime')
         .then(response => response.json())
         .then(data => {
             const date = document.getElementById("date");
